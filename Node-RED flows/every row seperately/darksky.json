@@ -1,0 +1,412 @@
+[
+    {
+        "id": "93537ff4.3676",
+        "type": "tab",
+        "label": "darksky",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c4f67616.cf2958",
+        "type": "darksky in",
+        "z": "93537ff4.3676",
+        "darksky": "",
+        "name": "",
+        "key": "",
+        "lon": "23.7",
+        "lat": "37.9",
+        "date": "",
+        "time": "",
+        "lang": "en",
+        "units": "si",
+        "x": 95,
+        "y": 105,
+        "wires": [
+            [
+                "6a1d67fd.85eb98"
+            ]
+        ]
+    },
+    {
+        "id": "3ce30b28.e4fb74",
+        "type": "inject",
+        "z": "93537ff4.3676",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 45,
+        "wires": [
+            [
+                "4777e981.e27b88"
+            ]
+        ]
+    },
+    {
+        "id": "4777e981.e27b88",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "Set coordinates",
+        "func": "var newMsg = { \n        location:  {\n        lat : 1,\n        lon : 1\n        }\n};\n\n//var date = new Date() ;\n//console.log(msg.payload) ;\n\nnewMsg.location.lat = 37.98 ;\nnewMsg.location.lon = 23.72 ;\n\nreturn newMsg;\n\nmsg.location.lat = 37.98 ;\nmsg.location.lon = 23.72 ;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 365,
+        "y": 45,
+        "wires": [
+            [
+                "6abedec6.287de"
+            ]
+        ]
+    },
+    {
+        "id": "6abedec6.287de",
+        "type": "darksky",
+        "z": "93537ff4.3676",
+        "darksky": "",
+        "name": "",
+        "lon": "23.72",
+        "lat": "37.98",
+        "date": "",
+        "time": "",
+        "mode": "node",
+        "lang": "en",
+        "units": "si",
+        "x": 615,
+        "y": 45,
+        "wires": [
+            [
+                "59233e43.7583"
+            ]
+        ]
+    },
+    {
+        "id": "59233e43.7583",
+        "type": "debug",
+        "z": "93537ff4.3676",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 860,
+        "y": 45,
+        "wires": []
+    },
+    {
+        "id": "d46a80cc.997f9",
+        "type": "mysql",
+        "z": "93537ff4.3676",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "darkskySensors",
+        "x": 665,
+        "y": 390,
+        "wires": [
+            [
+                "8549c226.265dc"
+            ]
+        ]
+    },
+    {
+        "id": "8549c226.265dc",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data created. (darksky)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 390,
+        "wires": [
+            [
+                "8f744bb7.b951e8"
+            ]
+        ]
+    },
+    {
+        "id": "8f744bb7.b951e8",
+        "type": "debug",
+        "z": "93537ff4.3676",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1135,
+        "y": 390,
+        "wires": []
+    },
+    {
+        "id": "40d5d397.584a8c",
+        "type": "inject",
+        "z": "93537ff4.3676",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 390,
+        "wires": [
+            [
+                "e667efb5.59e8b"
+            ]
+        ]
+    },
+    {
+        "id": "95e041a.44050c",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data dropped. (darksky)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 510,
+        "wires": [
+            [
+                "1b655289.d0aa7d"
+            ]
+        ]
+    },
+    {
+        "id": "1b655289.d0aa7d",
+        "type": "debug",
+        "z": "93537ff4.3676",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1135,
+        "y": 510,
+        "wires": []
+    },
+    {
+        "id": "ec0c862e.f51c58",
+        "type": "inject",
+        "z": "93537ff4.3676",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 510,
+        "wires": [
+            [
+                "fbfc16db.f046e8"
+            ]
+        ]
+    },
+    {
+        "id": "79b62744.c33b58",
+        "type": "mysql",
+        "z": "93537ff4.3676",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "darkskySensors",
+        "x": 665,
+        "y": 510,
+        "wires": [
+            [
+                "95e041a.44050c"
+            ]
+        ]
+    },
+    {
+        "id": "5ec7939b.2289cc",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data emptied. (darksky)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 450,
+        "wires": [
+            [
+                "16bc79b6.34d226"
+            ]
+        ]
+    },
+    {
+        "id": "16bc79b6.34d226",
+        "type": "debug",
+        "z": "93537ff4.3676",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1135,
+        "y": 450,
+        "wires": []
+    },
+    {
+        "id": "3e7eb25.1a8bb4e",
+        "type": "inject",
+        "z": "93537ff4.3676",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 450,
+        "wires": [
+            [
+                "88c48cf8.20687"
+            ]
+        ]
+    },
+    {
+        "id": "82c9c0e4.d3ae9",
+        "type": "mysql",
+        "z": "93537ff4.3676",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "darkskySensors",
+        "x": 665,
+        "y": 450,
+        "wires": [
+            [
+                "5ec7939b.2289cc"
+            ]
+        ]
+    },
+    {
+        "id": "e667efb5.59e8b",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "create tables (darksky)",
+        "func": "/*\nmsg.topic = \"CREATE TABLE AthensStationDarksky (time INT UNSIGNED PRIMARY KEY, temperature SMALLINT, \" +\n    \"humidity TINYINT UNSIGNED, pressure SMALLINT UNSIGNED,\" +\n    \"visibility SMALLINT UNSIGNED, windSpeed SMALLINT UNSIGNED, \" +\n    \"windDirection SMALLINT UNSIGNED, clouds TINYINT UNSIGNED, \" +\n    \"dewPoint SMALLINT, UV SMALLINT UNSIGNED, ozone SMALLINT UNSIGNED) ;\" ;\n*/\n\nmsg.topic = \"CREATE TABLE sensor15 (time INT UNSIGNED PRIMARY KEY, temperature FLOAT(10,2)) ;\" +\n\"CREATE TABLE sensor16 (time INT UNSIGNED PRIMARY KEY, humidity TINYINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor17 (time INT UNSIGNED PRIMARY KEY, pressure SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor18 (time INT UNSIGNED PRIMARY KEY, visibility SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor19 (time INT UNSIGNED PRIMARY KEY, speed FLOAT(10,2) UNSIGNED, direction SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor20 (time INT UNSIGNED PRIMARY KEY, cloudCoverage TINYINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor21 (time INT UNSIGNED PRIMARY KEY, dewPoint FLOAT(10,2)) ;\" +\n\"CREATE TABLE sensor22 (time INT UNSIGNED PRIMARY KEY, uv SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor23 (time INT UNSIGNED PRIMARY KEY, ozone FLOAT(16,2) UNSIGNED) ;\" ;\n\n/*\nTemperature\nHumidity\nPressure\nVisibility\nWind (speed and direction)\nSky cloud coverage in percent\nDew point\nUV\nOzone\n*/\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 355,
+        "y": 390,
+        "wires": [
+            [
+                "d46a80cc.997f9"
+            ]
+        ]
+    },
+    {
+        "id": "fbfc16db.f046e8",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "drop tables (darksky)",
+        "func": "//msg.topic = \"DROP TABLE AthensStationDarksky ;\" ;\n\nmsg.topic = \"DROP TABLE sensor15 ;\" +\n\"DROP TABLE sensor16 ;\" +\n\"DROP TABLE sensor17 ;\" +\n\"DROP TABLE sensor18 ;\" +\n\"DROP TABLE sensor19 ;\" +\n\"DROP TABLE sensor20 ;\" +\n\"DROP TABLE sensor21 ;\" +\n\"DROP TABLE sensor22 ;\" +\n\"DROP TABLE sensor23 ;\"  ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 354.9930610656738,
+        "y": 510.8368215560913,
+        "wires": [
+            [
+                "79b62744.c33b58"
+            ]
+        ]
+    },
+    {
+        "id": "88c48cf8.20687",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "empty tables (darksky)",
+        "func": "//msg.topic = \"DELETE FROM AthensStationDarksky ;\" ;\n\nmsg.topic = \"DELETE TABLE sensor15 ;\" +\n\"DELETE TABLE sensor16 ;\" +\n\"DELETE TABLE sensor17 ;\" +\n\"DELETE TABLE sensor18 ;\" +\n\"DELETE TABLE sensor19 ;\" +\n\"DELETE TABLE sensor20 ;\" +\n\"DELETE TABLE sensor21 ;\" +\n\"DELETE TABLE sensor22 ;\" +\n\"DELETE TABLE sensor23 ;\"  ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 354.9930610656738,
+        "y": 450.8368215560913,
+        "wires": [
+            [
+                "82c9c0e4.d3ae9"
+            ]
+        ]
+    },
+    {
+        "id": "cd56dc34.453b1",
+        "type": "mysql",
+        "z": "93537ff4.3676",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "darkskySensors",
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "a367b29c.11e82"
+            ]
+        ]
+    },
+    {
+        "id": "6a1d67fd.85eb98",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "Transform data before DB",
+        "func": "var timestamp = msg.data.currently.time ;\nvar temp = msg.data.currently.temperature ;       //C\nvar hum = Math.round(msg.data.currently.humidity * 100) ;  //%\nvar press = Math.round(msg.data.currently.pressure) ;      //hPa\nvar vis = Math.round(msg.data.currently.visibility * 1000) ;    //km\nvar wSpeed = msg.payload.windspeed ;         //m/s\nvar wDir = msg.payload.winddirection ;      //meteorological degrees\nvar skyCloudCov = Math.round(msg.data.currently.cloudCover * 100) ; //%\nvar dewP = msg.data.currently.dewPoint * 100 ;          //C\nvar uvRadiation = msg.data.currently.uvIndex ;          //0-11\nvar oz = msg.data.currently.ozone ;     //Dobson\n\nvar newMsg = { \n        time : timestamp,\n        temperature : temp,\n        humidity : hum,\n        pressure : press,\n        visibility : vis,\n        windSpeed : wSpeed,\n        windDirection : wDir,\n        skyCloudCoverage : skyCloudCov,\n        dewPoint : dewP,\n        uv : uvRadiation,\n        ozone : oz\n};\n\nreturn newMsg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 335,
+        "y": 105,
+        "wires": [
+            [
+                "e01bf278.464fc"
+            ]
+        ]
+    },
+    {
+        "id": "a367b29c.11e82",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"Sensor data entry failed. (darksky)\" ;\n} else {\n    msg.payload = \"Sensor data inserted into database successfully. (darksky)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 180,
+        "wires": [
+            [
+                "daae26c.bf919d8"
+            ]
+        ]
+    },
+    {
+        "id": "daae26c.bf919d8",
+        "type": "debug",
+        "z": "93537ff4.3676",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 745,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e01bf278.464fc",
+        "type": "function",
+        "z": "93537ff4.3676",
+        "name": "query create tables (darksky)",
+        "func": "/*\nmsg.topic = \"INSERT INTO AthensStationDarksky (time, temperature, humidity, pressure, \" +\n    \"visibility, windSpeed, windDirection, clouds, dewPoint, UV, ozone) \" +\n    \"VALUES (\" + msg.time + \",\" + msg.temperature + \",\" + msg.humidity +\n    \",\" + msg.pressure + \",\" + msg.visibility + \",\" + msg.windSpeed + \",\" +\n    msg.windDirection + \",\" + msg.skyCloudCoverage + \",\" +msg.dewPoint +\n    \",\" + msg.UV + \",\" + msg.ozone + \") ;\" ;\n    \nconsole.log(msg.topic) ;\n*/\n\nvar query = \"\" ;\nif (typeof(msg.temperature) != undefined && !isNaN(msg.temperature)) {\n    query += \"INSERT INTO sensor15 (time, temperature) VALUES (\" +\n    msg.time + \",\" + msg.temperature + \") ;\" ;\n}\nif (typeof(msg.humidity) != undefined && !isNaN(msg.humidity)) {\n    query += \"INSERT INTO sensor16 (time, humidity) VALUES (\" +\n    msg.time + \",\" + msg.humidity + \") ;\" ;\n}\nif (typeof(msg.pressure) != undefined && !isNaN(msg.pressure)) {\n    query += \"INSERT INTO sensor17 (time, pressure) VALUES (\" +\n    msg.time + \",\" + msg.pressure + \") ;\" ;\n}\nif (typeof(msg.visibility) != undefined && !isNaN(msg.visibility)) {\n    query += \"INSERT INTO sensor18 (time, visibility) VALUES (\" +\n    msg.time + \",\" + msg.visibility + \") ;\" ;\n}\nif (typeof(msg.windSpeed) != undefined && !isNaN(msg.temperature)\n    && typeof(msg.windDirection) != undefined && !isNaN(msg.windDirection)) {\n    query += \"INSERT INTO sensor19 (time, speed, direction) VALUES (\" +\n    msg.time + \",\" + msg.windSpeed + \",\" + msg.windDirection + \") ;\" ;\n}\nif (typeof(msg.skyCloudCoverage) != undefined && !isNaN(msg.skyCloudCoverage)) {\n    query += \"INSERT INTO sensor20 (time, cloudCoverage) VALUES (\" +\n    msg.time + \",\" + msg.skyCloudCoverage + \") ;\" ;\n}\nif (typeof(msg.dewPoint) != undefined && !isNaN(msg.dewPoint)) {\n    query += \"INSERT INTO sensor21 (time, dewPoint) VALUES (\" +\n    msg.time + \",\" + msg.dewPoint + \") ;\" ;\n}\nif (typeof(msg.uv) != undefined && !isNaN(msg.uv)) {\n    query += \"INSERT INTO sensor22 (time, uv) VALUES (\" +\n    msg.time + \",\" + msg.uv + \") ;\" ;\n}\nif (typeof(msg.ozone) != undefined && !isNaN(msg.ozone)) {\n    query += \"INSERT INTO sensor23 (time, ozone) VALUES (\" +\n    msg.time + \",\" + msg.ozone + \") ;\" ;\n}\n\nmsg.topic = query ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 645,
+        "y": 105,
+        "wires": [
+            [
+                "cd56dc34.453b1"
+            ]
+        ]
+    },
+    {
+        "id": "5d2993e1.0cdcdc",
+        "type": "MySQLdatabase",
+        "z": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "diplwmatikiData",
+        "tz": ""
+    }
+]

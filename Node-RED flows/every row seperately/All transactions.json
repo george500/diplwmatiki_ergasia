@@ -1,0 +1,500 @@
+[
+    {
+        "id": "10adf7ec.3f8e78",
+        "type": "tab",
+        "label": "All transactions",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b3429899.4b7eb8",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 255,
+        "wires": [
+            [
+                "a57ee4e8.56f598"
+            ]
+        ]
+    },
+    {
+        "id": "a57ee4e8.56f598",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "transfer",
+        "func": "var web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[1], web3.toWei(0.000000000000000001, \"ether\"));\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[1], web3.toWei(0.000000000001, \"ether\"));\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[1], web3.toWei(50, \"ether\"));\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[2], web3.toWei(50, \"ether\"));\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[8], web3.toWei(1, \"ether\"));\n\nweb3.eth.defaultAccount = web3.eth.accounts[6] ;\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[7], web3.toWei(2, \"ether\"));\n\nweb3.eth.defaultAccount = web3.eth.accounts[8] ;\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[1], web3.toWei(2, \"ether\"));\nweb3.eth.defaultAccount = web3.eth.accounts[7] ;\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[4], web3.toWei(2, \"ether\"));\nweb3.eth.defaultAccount = web3.eth.accounts[5] ;\nNtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[3], web3.toWei(2, \"ether\"));\n\n\n\n\nmsg.payload = \"transfer transactions sent.\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 315,
+        "y": 255,
+        "wires": [
+            [
+                "42b51e9c.e2eab"
+            ]
+        ]
+    },
+    {
+        "id": "42b51e9c.e2eab",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 255,
+        "wires": []
+    },
+    {
+        "id": "18d34b4f.841fb5",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 75,
+        "wires": [
+            [
+                "f105d282.e0372"
+            ]
+        ]
+    },
+    {
+        "id": "f105d282.e0372",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "fallback function",
+        "func": "var web3 = global.get('web3Conn') ;\n\nvar NtuaTokenContractAddress = \"0x67dbda62a1716679c9ca1fbfab3fcecd36b4dcc5\" ;\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nweb3.eth.sendTransaction({from:web3.eth.accounts[0], to:NtuaTokenContractAddress, \n        value: web3.toWei(1, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[0], to:NtuaTokenContractAddress, \n        value: web3.toWei(20, \"ether\")}) ;\n        web3.eth.defaultAccount = web3.eth.accounts[1] ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[1], to:NtuaTokenContractAddress, \n        value: web3.toWei(1, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[1], to:NtuaTokenContractAddress, \n        value: web3.toWei(5, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[1], to:NtuaTokenContractAddress, \n        value: web3.toWei(5, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[2], to:NtuaTokenContractAddress, \n        value: web3.toWei(1, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[2], to:NtuaTokenContractAddress, \n        value: web3.toWei(5, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[6], to:NtuaTokenContractAddress, \n        value: web3.toWei(50, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[6], to:NtuaTokenContractAddress, \n        value: web3.toWei(1, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[7], to:NtuaTokenContractAddress, \n        value: web3.toWei(5, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[7], to:NtuaTokenContractAddress, \n        value: web3.toWei(7, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[7], to:NtuaTokenContractAddress, \n        value: web3.toWei(10, \"ether\")}) ;\nweb3.eth.sendTransaction({from:web3.eth.accounts[7], to:NtuaTokenContractAddress, \n        value: web3.toWei(0.0000002, \"ether\")}) ;\n\nmsg.payload = \"fallback transactions sent.\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 335,
+        "y": 75,
+        "wires": [
+            [
+                "c490c017.0ad5b"
+            ]
+        ]
+    },
+    {
+        "id": "c490c017.0ad5b",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 75,
+        "wires": []
+    },
+    {
+        "id": "a809a803.961748",
+        "type": "comment",
+        "z": "10adf7ec.3f8e78",
+        "name": "NtuaToken",
+        "info": "",
+        "x": 105,
+        "y": 30,
+        "wires": []
+    },
+    {
+        "id": "a9e74848.e69048",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 135,
+        "wires": [
+            [
+                "5ac1a634.5d7608"
+            ]
+        ]
+    },
+    {
+        "id": "5ac1a634.5d7608",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "changePrice",
+        "func": "var web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nNtuaTokenContract.changePrice(web3.toWei(0.000000000000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(0.000000000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(0.000000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(0.000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(0.000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(0.001, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(1, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(2, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(3, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(4, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(5, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(8, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(10, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(100, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(1000, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(10000, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(100000, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(1000000, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(10000000, \"ether\"), (err,res) => {});\nNtuaTokenContract.changePrice(web3.toWei(100000000, \"ether\"), (err,res) => {});\n\nmsg.payload = \"changePrice transactions sent.\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 325,
+        "y": 135,
+        "wires": [
+            [
+                "d1dc4c3a.9941e"
+            ]
+        ]
+    },
+    {
+        "id": "d1dc4c3a.9941e",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 135,
+        "wires": []
+    },
+    {
+        "id": "5445b4c4.1ee1ac",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 195,
+        "wires": [
+            [
+                "a93dfe1b.ec1ed"
+            ]
+        ]
+    },
+    {
+        "id": "a93dfe1b.ec1ed",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "retrieveEthereum",
+        "func": "var web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nNtuaTokenContract.retrieveEthereum(web3.toWei(0.000000000000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(0.000000000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(0.000000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(0.000000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(0.000001, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(0.000005, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(0.001, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(1, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(2, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(3, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(4, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(5, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(8, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(10, \"ether\"), (err,res) => {});\nNtuaTokenContract.retrieveEthereum(web3.toWei(100, \"ether\"), (err,res) => {});\n\n\nmsg.payload = \"retrieveEthereum transactions sent.\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 345,
+        "y": 195,
+        "wires": [
+            [
+                "ceb0a6f7.8cec58"
+            ]
+        ]
+    },
+    {
+        "id": "ceb0a6f7.8cec58",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 195,
+        "wires": []
+    },
+    {
+        "id": "77951c1.602d9e4",
+        "type": "comment",
+        "z": "10adf7ec.3f8e78",
+        "name": "Broker",
+        "info": "",
+        "x": 95,
+        "y": 315,
+        "wires": []
+    },
+    {
+        "id": "6db42c83.c32464",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 360,
+        "wires": [
+            [
+                "565d0abc.b6d434"
+            ]
+        ]
+    },
+    {
+        "id": "565d0abc.b6d434",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "createSensor",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\n//Openweathermap\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[1] ;\nvar type = 1 ;\nvar price = web3.toWei(0.001, \"ether\") ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 2 ;\nvar latitude = 37.98 * coordMult ;\nvar longtitude = 23.72 * coordMult ;\nvar url = \"localhost:1880/mysensor/1\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.001, \"ether\") ;\nurl = \"localhost:1880/mysensor/2\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.002, \"ether\") ;\nurl = \"localhost:1880/mysensor/3\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.006, \"ether\") ;\nurl = \"localhost:1880/mysensor/4\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.004, \"ether\") ;\nurl = \"localhost:1880/mysensor/5\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 6 ;\nprice = web3.toWei(0.003, \"ether\") ;\nurl = \"localhost:1880/mysensor/6\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"createSensor transactions sent.\" ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 265,
+        "y": 360,
+        "wires": [
+            [
+                "fb039f6e.a09d9"
+            ]
+        ]
+    },
+    {
+        "id": "58fbb666.58e298",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 925,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "fb039f6e.a09d9",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "createSensor",
+        "func": "var web3 = global.get('web3Conn') ;\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[2] ;\nvar type ;\nvar price ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 6 ;\nvar latitude ;\nvar longtitude ;\nvar url ;\n\n//wunderground Athens\nlatitude = 37.984592 * coordMult ;\nlongtitude = 23.714140 * coordMult ;\n\ntype = 1 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/7\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/8\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/9\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/10\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/11\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 7 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/12\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 8 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/13\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 9 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/14\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"createSensor transactions sent.\" ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 430,
+        "y": 360,
+        "wires": [
+            [
+                "16571af5.4c42b5"
+            ]
+        ]
+    },
+    {
+        "id": "16571af5.4c42b5",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "createSensor",
+        "func": "var web3 = global.get('web3Conn') ;\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[3] ;\nvar type ;\nvar price ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 1 ;\nvar latitude ;\nvar longtitude ;\nvar url ;\n\n//Darksky Athens\nlatitude = 37.98 * coordMult ;\nlongtitude = 23.72 * coordMult ;\n\ntype = 1 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/15\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/16\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/17\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/18\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/19\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 6 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/20\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 7 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/21\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 9 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/22\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 10 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/23\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"createSensor transactions sent.\" ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 595,
+        "y": 360,
+        "wires": [
+            [
+                "e8c58299.dba4"
+            ]
+        ]
+    },
+    {
+        "id": "e8c58299.dba4",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "createSensor",
+        "func": "var web3 = global.get('web3Conn') ;\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[2] ;\nvar type ;\nvar price ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 2 ;\nvar latitude ;\nvar longtitude ;\nvar url ;\n\n//wunderground Thessaloniki\nlatitude = 40.631668 * coordMult ;\nlongtitude = 22.948055 * coordMult ;\n\ntype = 1 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/24\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/25\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/26\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/27\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/28\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 7 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/29\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 8 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/30\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 9 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/31\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"createSensor transactions sent.\" ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 360,
+        "wires": [
+            [
+                "58fbb666.58e298"
+            ]
+        ]
+    },
+    {
+        "id": "87bb57ca.92df58",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 600,
+        "wires": [
+            [
+                "e7bec4d2.f46698"
+            ]
+        ]
+    },
+    {
+        "id": "e7bec4d2.f46698",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "buyData",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[8] ;\nvar clientAccount = web3.eth.accounts[8] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar text ;\n\nvar buyer = web3.eth.accounts[8] ;\nvar sensorID = 1 ;\nvar fromTime = parseInt((new Date('24-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('25-Dec-2017 19:57:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\n\nsensorID = 1 ;\nfromTime = parseInt((new Date('25-Nov-2017 20:57:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('18-Dec-2017 23:57:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\nsensorID = 1 ;\nfromTime = parseInt((new Date('19-Dec-2017 17:54:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('1-Jan-2018 19:54:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\nsensorID = 14 ;\nfromTime = parseInt((new Date('26-Dec-2017 17:54:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('29-Dec-2017 19:54:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\n\ntext = \"buyData transactions sent.\" ;\n//console.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 315,
+        "y": 600,
+        "wires": [
+            [
+                "171d81b7.5770be"
+            ]
+        ]
+    },
+    {
+        "id": "171d81b7.5770be",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "a9ed2352.79567",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "changeSensorPrice",
+        "func": "var web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[1] ;\n//BrokerContract.changeSensorPrice(sensorID, newPrice, {gas: 300000}, (err,res) =>{\n\nBrokerContract.changeSensorPrice(1, web3.toWei(0.000000000000000001, \"ether\"));\nBrokerContract.changeSensorPrice(1, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(1, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(1, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(1, web3.toWei(1, \"ether\"));\nBrokerContract.changeSensorPrice(2, web3.toWei(0.000000000000000001, \"ether\"));\nBrokerContract.changeSensorPrice(2, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(2, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(5, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(5, web3.toWei(1, \"ether\"));\nBrokerContract.changeSensorPrice(6, web3.toWei(2, \"ether\"));\n\nweb3.eth.defaultAccount = web3.eth.accounts[2] ;\n\nBrokerContract.changeSensorPrice(8, web3.toWei(0.000000000000000001, \"ether\"));\nBrokerContract.changeSensorPrice(8, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(10, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(11, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(11, web3.toWei(1, \"ether\"));\nBrokerContract.changeSensorPrice(12, web3.toWei(0.000000000000000001, \"ether\"));\nBrokerContract.changeSensorPrice(12, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(14, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(14, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(14, web3.toWei(1, \"ether\"));\nBrokerContract.changeSensorPrice(26, web3.toWei(2, \"ether\"));\nBrokerContract.changeSensorPrice(28, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(28, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(28, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(31, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(31, web3.toWei(1, \"ether\"));\n\nweb3.eth.defaultAccount = web3.eth.accounts[3] ;\n\nBrokerContract.changeSensorPrice(18, web3.toWei(0.000000000000000001, \"ether\"));\nBrokerContract.changeSensorPrice(18, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(20, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(21, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(21, web3.toWei(1, \"ether\"));\nBrokerContract.changeSensorPrice(22, web3.toWei(0.000000000000000001, \"ether\"));\nBrokerContract.changeSensorPrice(22, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(23, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(23, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(23, web3.toWei(1, \"ether\"));\nBrokerContract.changeSensorPrice(15, web3.toWei(2, \"ether\"));\nBrokerContract.changeSensorPrice(15, web3.toWei(0.00000000001, \"ether\"));\nBrokerContract.changeSensorPrice(15, web3.toWei(0.00001, \"ether\"));\nBrokerContract.changeSensorPrice(19, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(19, web3.toWei(0.01, \"ether\"));\nBrokerContract.changeSensorPrice(19, web3.toWei(1, \"ether\"));\n\n\nmsg.payload = \"changeSensorPrice transactions sent.\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 345,
+        "y": 480,
+        "wires": [
+            [
+                "c625bd79.db62b"
+            ]
+        ]
+    },
+    {
+        "id": "9ac417b8.0fc7c8",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 480,
+        "wires": [
+            [
+                "a9ed2352.79567"
+            ]
+        ]
+    },
+    {
+        "id": "c625bd79.db62b",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "fed9bb9f.74df38",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "changeSensorSeller",
+        "func": "var web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[1] ;\n\nBrokerContract.changeSensorSeller(1, web3.eth.accounts[2]) ;\nBrokerContract.changeSensorSeller(2, web3.eth.accounts[8]) ;\nBrokerContract.changeSensorSeller(3, web3.eth.accounts[5]) ;\nBrokerContract.changeSensorSeller(4, web3.eth.accounts[6]) ;\nBrokerContract.changeSensorSeller(5, web3.eth.accounts[3]) ;\nBrokerContract.changeSensorSeller(6, web3.eth.accounts[4]) ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[2] ;\n\nBrokerContract.changeSensorSeller(7, web3.eth.accounts[1]) ;\nBrokerContract.changeSensorSeller(8, web3.eth.accounts[3]) ;\nBrokerContract.changeSensorSeller(9, web3.eth.accounts[4]) ;\nBrokerContract.changeSensorSeller(10, web3.eth.accounts[6]) ;\nBrokerContract.changeSensorSeller(11, web3.eth.accounts[0]) ;\nBrokerContract.changeSensorSeller(12, web3.eth.accounts[5]) ;\nBrokerContract.changeSensorSeller(13, web3.eth.accounts[4]) ;\nBrokerContract.changeSensorSeller(14, web3.eth.accounts[1]) ;\nBrokerContract.changeSensorSeller(24, web3.eth.accounts[7]) ;\nBrokerContract.changeSensorSeller(25, web3.eth.accounts[8]) ;\nBrokerContract.changeSensorSeller(26, web3.eth.accounts[9]) ;\nBrokerContract.changeSensorSeller(27, web3.eth.accounts[5]) ;\nBrokerContract.changeSensorSeller(28, web3.eth.accounts[1]) ;\nBrokerContract.changeSensorSeller(29, web3.eth.accounts[3]) ;\nBrokerContract.changeSensorSeller(30, web3.eth.accounts[4]) ;\nBrokerContract.changeSensorSeller(31, web3.eth.accounts[9]) ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[3] ;\n\nBrokerContract.changeSensorSeller(15, web3.eth.accounts[1]) ;\nBrokerContract.changeSensorSeller(16, web3.eth.accounts[4]) ;\nBrokerContract.changeSensorSeller(17, web3.eth.accounts[2]) ;\nBrokerContract.changeSensorSeller(18, web3.eth.accounts[6]) ;\nBrokerContract.changeSensorSeller(19, web3.eth.accounts[9]) ;\nBrokerContract.changeSensorSeller(20, web3.eth.accounts[7]) ;\nBrokerContract.changeSensorSeller(21, web3.eth.accounts[8]) ;\nBrokerContract.changeSensorSeller(22, web3.eth.accounts[2]) ;\nBrokerContract.changeSensorSeller(23, web3.eth.accounts[5]) ;\n\nmsg.payload = \"changeSensorSeller transactions sent.\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 355,
+        "y": 420,
+        "wires": [
+            [
+                "1333f8b3.c81bb7"
+            ]
+        ]
+    },
+    {
+        "id": "77ba4c6c.212484",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 420,
+        "wires": [
+            [
+                "fed9bb9f.74df38"
+            ]
+        ]
+    },
+    {
+        "id": "1333f8b3.c81bb7",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "f6b1d3ca.504e5",
+        "type": "inject",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 540,
+        "wires": [
+            [
+                "61dfeb4a.4f9be4"
+            ]
+        ]
+    },
+    {
+        "id": "e30c96ff.485188",
+        "type": "debug",
+        "z": "10adf7ec.3f8e78",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 580,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "61dfeb4a.4f9be4",
+        "type": "function",
+        "z": "10adf7ec.3f8e78",
+        "name": "changeSensorUrl",
+        "func": "var web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[1];\n\nBrokerContract.changeSensorUrl(1+62,'www.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa') ;\nBrokerContract.changeSensorUrl(2+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukr') ;\nBrokerContract.changeSensorUrl(3+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(4+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(5+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(6+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[2] ;\n\nBrokerContract.changeSensorUrl(7+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(8+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(9+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(10+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(11+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(12+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(13+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(14+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(24+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(25+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(26+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(27+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(28+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(29+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(30+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(31+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[3] ;\n\nBrokerContract.changeSensorUrl(15+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(16+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(17+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(18+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(19+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(20+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(21+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(22+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\nBrokerContract.changeSensorUrl(23+62,'https://remix.ethereum.org/#version=soljson-v0.4.16+commit.d7661dd9.js&optimize=falseafsbgagyaukrgbfuerywagvuetrwgay6ufvrasdfvgrhgdfsgds') ;\n\nmsg.payload = \"changeSensorUrl transactions sent.\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 345,
+        "y": 540,
+        "wires": [
+            [
+                "e30c96ff.485188"
+            ]
+        ]
+    }
+]

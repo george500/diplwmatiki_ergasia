@@ -1,0 +1,832 @@
+[
+    {
+        "id": "6c115d5e.e0c5b4",
+        "type": "tab",
+        "label": "Openweathermap",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "46bcf7fb.e56428",
+        "type": "openweathermap",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "wtype": "current",
+        "lon": "23.72",
+        "lat": "37.98",
+        "city": "",
+        "country": "",
+        "language": "en",
+        "x": 645,
+        "y": 45,
+        "wires": [
+            [
+                "1794831f.19ae8d"
+            ]
+        ]
+    },
+    {
+        "id": "2573d2ec.2a0e9e",
+        "type": "openweathermap in",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "wtype": "current",
+        "lon": "23.72",
+        "lat": "37.98",
+        "city": "",
+        "country": "",
+        "language": "en",
+        "x": 95,
+        "y": 135,
+        "wires": [
+            [
+                "49657cb4.e85f24"
+            ]
+        ]
+    },
+    {
+        "id": "56490102.4a7d",
+        "type": "mysql",
+        "z": "6c115d5e.e0c5b4",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "openweathermapSensors",
+        "x": 695,
+        "y": 390,
+        "wires": [
+            [
+                "f3f7891a.0c46c8"
+            ]
+        ]
+    },
+    {
+        "id": "994df191.e7ba9",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "create tables (openweathermap)",
+        "func": "/*\nmsg.topic = \"CREATE TABLE AthensStationOpenweathermap (time INT UNSIGNED PRIMARY KEY, temperature SMALLINT, \" +\n    \"humidity TINYINT UNSIGNED, pressure SMALLINT UNSIGNED,\" +\n    \"visibility SMALLINT UNSIGNED, windSpeed SMALLINT UNSIGNED, \" +\n    \"windDirection SMALLINT UNSIGNED, clouds TINYINT UNSIGNED)\" ;\n*/\n\nmsg.topic = \"CREATE TABLE sensor1 (time INT UNSIGNED PRIMARY KEY, temperature FLOAT(10,2)) ;\" +    //temperature\n\"CREATE TABLE sensor2 (time INT UNSIGNED PRIMARY KEY, humidity TINYINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor3 (time INT UNSIGNED PRIMARY KEY, pressure SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor4 (time INT UNSIGNED PRIMARY KEY, visibility SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor5 (time INT UNSIGNED PRIMARY KEY, speed FLOAT(10,2) UNSIGNED, direction SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor6 (time INT UNSIGNED PRIMARY KEY, cloudCoverage TINYINT UNSIGNED) ;\" ;\n\n/*\nTemperature\nHumidity\nPressure\nVisibility\nWind (speed and direction)\nSky cloud coverage\n*/\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 390,
+        "wires": [
+            [
+                "56490102.4a7d"
+            ]
+        ]
+    },
+    {
+        "id": "f3f7891a.0c46c8",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data created. (openweathermap)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 390,
+        "wires": [
+            [
+                "6d298f13.89564"
+            ]
+        ]
+    },
+    {
+        "id": "6d298f13.89564",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 390,
+        "wires": []
+    },
+    {
+        "id": "527181b0.f1c8d",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 390,
+        "wires": [
+            [
+                "994df191.e7ba9"
+            ]
+        ]
+    },
+    {
+        "id": "b8a8aad3.3b3788",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "drop tables (openweathermap)",
+        "func": "//msg.topic = \"DROP TABLE AthensStationOpenweathermap ;\" ;\n\n/*\nmsg.topic = \"DROP TABLE tempSensor ;\" +\n\"DROP TABLE humSensor ;\" +\n\"DROP TABLE pressSensor ;\" +\n\"DROP TABLE visSensor ;\" +\n\"DROP TABLE windSensor ;\" +\n\"DROP TABLE cloudSensor ;\" ;\n\"DROP TABLE dewSensor ;\" +\n\"DROP TABLE uvSensor ;\" ;\n*/\nmsg.topic = \"DROP TABLE sensor1 ;\" +\n\"DROP TABLE sensor2 ;\" +\n\"DROP TABLE sensor3 ;\" +\n\"DROP TABLE sensor4 ;\" +\n\"DROP TABLE sensor5 ;\" +\n\"DROP TABLE sensor6 ;\" ;\n\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 510,
+        "wires": [
+            [
+                "76411279.bab97c"
+            ]
+        ]
+    },
+    {
+        "id": "c2a783a8.61a44",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data dropped. (openweathermap)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 510,
+        "wires": [
+            [
+                "40b98c81.1d9d44"
+            ]
+        ]
+    },
+    {
+        "id": "40b98c81.1d9d44",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 510,
+        "wires": []
+    },
+    {
+        "id": "bf24c270.bd093",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 510,
+        "wires": [
+            [
+                "b8a8aad3.3b3788"
+            ]
+        ]
+    },
+    {
+        "id": "76411279.bab97c",
+        "type": "mysql",
+        "z": "6c115d5e.e0c5b4",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "openweathermapSensors",
+        "x": 695,
+        "y": 510,
+        "wires": [
+            [
+                "c2a783a8.61a44"
+            ]
+        ]
+    },
+    {
+        "id": "421ec805.ce1c28",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 90,
+        "y": 45,
+        "wires": [
+            [
+                "e5f61785.320f58"
+            ]
+        ]
+    },
+    {
+        "id": "e5f61785.320f58",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Set coordinates",
+        "func": "var newMsg = { \n        location:  {\n        lat : 1,\n        lon : 1\n        }\n};\n\n//var date = new Date() ;\n//console.log(msg.payload) ;\n\nnewMsg.location.lat = 37.98 ;\nnewMsg.location.lon = 23.72 ;\n\nreturn newMsg;\n\nmsg.location.lat = 37.98 ;\nmsg.location.lon = 23.72 ;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 365,
+        "y": 45,
+        "wires": [
+            [
+                "46bcf7fb.e56428"
+            ]
+        ]
+    },
+    {
+        "id": "1794831f.19ae8d",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 935,
+        "y": 45,
+        "wires": []
+    },
+    {
+        "id": "c083f622.0820b8",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 765,
+        "wires": [
+            [
+                "9adc8f3b.54e1e"
+            ]
+        ]
+    },
+    {
+        "id": "50ff2677.9541e8",
+        "type": "http request",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 700,
+        "y": 765,
+        "wires": [
+            [
+                "f07f0fd0.fc8e8"
+            ]
+        ]
+    },
+    {
+        "id": "9adc8f3b.54e1e",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Set http request parameters (co)",
+        "func": "const apiKey = \"3adeb0ee633a6937ae142be4809d7035\" ;\n//const lat = \"37.98\" ;\n//const lon = \"23.72\" ;\nconst lat = 0.0 ;\nconst lon = 10.0 ;\n\nvar dateISO = new Date(msg.payload).toISOString();\ndateISO = \"2016-12-25T01:04:08Z\";\n\nvar str = \"http://api.openweathermap.org/pollution/v1/co/\" ;\n\nstr += lat + \",\" + lon + \"/\" ;\nstr += dateISO + \".json?appid=\" + apiKey ;\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/{location}/{datetime}.json?appid={api_key}\nlocation -> Location coordinates\ndatetime -> ISO 8601 date or alias\napi_key -> Your API key\n*/\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/0.0,10.0/2016-03-01Z.json?appid={your-api-key}\n1 digit (~78km)\nhttp://api.openweathermap.org/pollution/v1/o3/0.000,10.000/2016-03-01Z.json?appid={your-api-key}\n3 digits (78m)\n*/\n\nconsole.log(str) ;\n\nmsg.url = str ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 415,
+        "y": 765,
+        "wires": [
+            [
+                "50ff2677.9541e8"
+            ]
+        ]
+    },
+    {
+        "id": "93b18981.204a18",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "take data from javascript object",
+        "func": "console.log() ;\n\nvar ozon = msg.payload.data ;\nmsg.payload = ozon ;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 490,
+        "y": 855,
+        "wires": [
+            [
+                "3fb95acc.621526"
+            ]
+        ]
+    },
+    {
+        "id": "3fb95acc.621526",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 835,
+        "y": 855,
+        "wires": []
+    },
+    {
+        "id": "f07f0fd0.fc8e8",
+        "type": "json",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "pretty": false,
+        "x": 185,
+        "y": 855,
+        "wires": [
+            [
+                "93b18981.204a18"
+            ]
+        ]
+    },
+    {
+        "id": "a5a18f20.689dc",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 930,
+        "wires": [
+            [
+                "ceef41a1.91c5c"
+            ]
+        ]
+    },
+    {
+        "id": "c39f91d0.5ef32",
+        "type": "http request",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 700,
+        "y": 930,
+        "wires": [
+            [
+                "3ca9ea7b.08c046"
+            ]
+        ]
+    },
+    {
+        "id": "ceef41a1.91c5c",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Set http request parameters (o3)",
+        "func": "const apiKey = \"3adeb0ee633a6937ae142be4809d7035\" ;\n//const lat = \"37.98\" ;\n//const lon = \"23.72\" ;\nconst lat = 0.0 ;\nconst lon = 10.0 ;\n\nvar dateISO = new Date(msg.payload).toISOString();\ndateISO = \"2017-01-30T13:08:19Z\";\n\nvar str = \"http://api.openweathermap.org/pollution/v1/o3/\" ;\n\nstr += lat + \",\" + lon + \"/\" ;\nstr += dateISO + \".json?appid=\" + apiKey ;\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/{location}/{datetime}.json?appid={api_key}\nlocation -> Location coordinates\ndatetime -> ISO 8601 date or alias\napi_key -> Your API key\n*/\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/0.0,10.0/2016-03-01Z.json?appid={your-api-key}\n1 digit (~78km)\nhttp://api.openweathermap.org/pollution/v1/o3/0.000,10.000/2016-03-01Z.json?appid={your-api-key}\n3 digits (78m)\n*/\n\nconsole.log(str) ;\n\nmsg.url = str ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 415,
+        "y": 930,
+        "wires": [
+            [
+                "c39f91d0.5ef32"
+            ]
+        ]
+    },
+    {
+        "id": "8bbb8cff.89ae3",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 985,
+        "y": 930,
+        "wires": []
+    },
+    {
+        "id": "d09c362e.e40f18",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "take ozon from javascript object",
+        "func": "console.log() ;\n\nvar ozon = msg.payload.data ;\nmsg.payload = ozon ;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 490,
+        "y": 1020,
+        "wires": [
+            [
+                "d2f17323.513c3"
+            ]
+        ]
+    },
+    {
+        "id": "d2f17323.513c3",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 835,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "3ca9ea7b.08c046",
+        "type": "json",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "pretty": false,
+        "x": 185,
+        "y": 1020,
+        "wires": [
+            [
+                "d09c362e.e40f18"
+            ]
+        ]
+    },
+    {
+        "id": "4df037ca.474c08",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 1080,
+        "wires": [
+            [
+                "1e113a13.e3c096"
+            ]
+        ]
+    },
+    {
+        "id": "571bb740.5d9ae8",
+        "type": "http request",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 700,
+        "y": 1080,
+        "wires": [
+            [
+                "4dfb17ba.16f598"
+            ]
+        ]
+    },
+    {
+        "id": "1e113a13.e3c096",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Set http request parameters (so2)",
+        "func": "const apiKey = \"3adeb0ee633a6937ae142be4809d7035\" ;\n//const lat = \"37.98\" ;\n//const lon = \"23.72\" ;\nconst lat = 0.0 ;\nconst lon = 10.0 ;\n\nvar dateISO = new Date(msg.payload).toISOString();\ndateISO = \"2017-01-30T13:08:19Z\";\n\nvar str = \"http://api.openweathermap.org/pollution/v1/so2/\" ;\n\nstr += lat + \",\" + lon + \"/\" ;\nstr += dateISO + \".json?appid=\" + apiKey ;\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/{location}/{datetime}.json?appid={api_key}\nlocation -> Location coordinates\ndatetime -> ISO 8601 date or alias\napi_key -> Your API key\n*/\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/0.0,10.0/2016-03-01Z.json?appid={your-api-key}\n1 digit (~78km)\nhttp://api.openweathermap.org/pollution/v1/o3/0.000,10.000/2016-03-01Z.json?appid={your-api-key}\n3 digits (78m)\n*/\n\nconsole.log(str) ;\n\nmsg.url = str ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 425,
+        "y": 1080,
+        "wires": [
+            [
+                "571bb740.5d9ae8"
+            ]
+        ]
+    },
+    {
+        "id": "462d5902.6571e8",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 985,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "96a2f835.6319b8",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "take data from javascript object",
+        "func": "console.log() ;\n\nvar ozon = msg.payload.data ;\nmsg.payload = ozon ;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 490,
+        "y": 1170,
+        "wires": [
+            [
+                "cc0fb6d2.a64f28"
+            ]
+        ]
+    },
+    {
+        "id": "cc0fb6d2.a64f28",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 835,
+        "y": 1170,
+        "wires": []
+    },
+    {
+        "id": "4dfb17ba.16f598",
+        "type": "json",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "pretty": false,
+        "x": 185,
+        "y": 1170,
+        "wires": [
+            [
+                "96a2f835.6319b8"
+            ]
+        ]
+    },
+    {
+        "id": "2c7e4aae.f56c06",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 1230,
+        "wires": [
+            [
+                "1ce5253a.d323db"
+            ]
+        ]
+    },
+    {
+        "id": "a2178481.8da3c8",
+        "type": "http request",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 700,
+        "y": 1230,
+        "wires": [
+            [
+                "b25c25d4.5b0f28"
+            ]
+        ]
+    },
+    {
+        "id": "1ce5253a.d323db",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Set http request parameters (no2)",
+        "func": "const apiKey = \"3adeb0ee633a6937ae142be4809d7035\" ;\n//const lat = \"37.98\" ;\n//const lon = \"23.72\" ;\nconst lat = 0.0 ;\nconst lon = 10.0 ;\n\nvar dateISO = new Date(msg.payload).toISOString();\ndateISO = \"2017-01-30T13:08:19Z\";\n\nvar str = \"http://api.openweathermap.org/pollution/v1/no2/\" ;\n\nstr += lat + \",\" + lon + \"/\" ;\nstr += dateISO + \".json?appid=\" + apiKey ;\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/{location}/{datetime}.json?appid={api_key}\nlocation -> Location coordinates\ndatetime -> ISO 8601 date or alias\napi_key -> Your API key\n*/\n/*\nhttp://api.openweathermap.org/pollution/v1/o3/0.0,10.0/2016-03-01Z.json?appid={your-api-key}\n1 digit (~78km)\nhttp://api.openweathermap.org/pollution/v1/o3/0.000,10.000/2016-03-01Z.json?appid={your-api-key}\n3 digits (78m)\n*/\n\nconsole.log(str) ;\n\nmsg.url = str ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 425,
+        "y": 1230,
+        "wires": [
+            [
+                "a2178481.8da3c8"
+            ]
+        ]
+    },
+    {
+        "id": "de26c7ce.0a9108",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 985,
+        "y": 1230,
+        "wires": []
+    },
+    {
+        "id": "cb02546c.0e3d88",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "take data from javascript object",
+        "func": "console.log() ;\n\nvar ozon = msg.payload.data ;\nmsg.payload = ozon ;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 490,
+        "y": 1320,
+        "wires": [
+            [
+                "1621b674.f8e22a"
+            ]
+        ]
+    },
+    {
+        "id": "1621b674.f8e22a",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 835,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "b25c25d4.5b0f28",
+        "type": "json",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "pretty": false,
+        "x": 185,
+        "y": 1320,
+        "wires": [
+            [
+                "cb02546c.0e3d88"
+            ]
+        ]
+    },
+    {
+        "id": "5160bf69.52c14",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 985,
+        "y": 765,
+        "wires": []
+    },
+    {
+        "id": "2a1ed994.8d6176",
+        "type": "mysql",
+        "z": "6c115d5e.e0c5b4",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "openweathermapSensors",
+        "x": 170,
+        "y": 210,
+        "wires": [
+            [
+                "4f9438f6.021528"
+            ]
+        ]
+    },
+    {
+        "id": "a30d1372.f09cf",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "empty tables (openweathermap)",
+        "func": "//msg.topic = \"DELETE FROM AthensStationOpenweathermap ;\" ;\n\n/*\nmsg.topic = \"DELETE FROM tempSensor ;\" +\n\"DELETE FROM humSensor ;\" +\n\"DELETE FROM pressSensor ;\" +\n\"DELETE FROM visSensor ;\" +\n\"DELETE FROM windSensor ;\" +\n\"DELETE FROM cloudSensor ;\" ;\n/*\n\"DELETE FROM dewSensor ;\" +\n\"DELETE FROM uvSensor ;\" ;\n*/\n\nmsg.topic = \"DELETE TABLE sensor1 ;\" +\n\"DELETE TABLE sensor2 ;\" +\n\"DELETE TABLE sensor3 ;\" +\n\"DELETE TABLE sensor4 ;\" +\n\"DELETE TABLE sensor5 ;\" +\n\"DELETE TABLE sensor6 ;\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 450,
+        "wires": [
+            [
+                "8a90eb5e.2837e8"
+            ]
+        ]
+    },
+    {
+        "id": "6dbb6816.a9bbc8",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data emptied. (openweathermap)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 450,
+        "wires": [
+            [
+                "d433960a.c5a238"
+            ]
+        ]
+    },
+    {
+        "id": "d433960a.c5a238",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 450,
+        "wires": []
+    },
+    {
+        "id": "82b64bc.0b23cb8",
+        "type": "inject",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 450,
+        "wires": [
+            [
+                "a30d1372.f09cf"
+            ]
+        ]
+    },
+    {
+        "id": "8a90eb5e.2837e8",
+        "type": "mysql",
+        "z": "6c115d5e.e0c5b4",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "openweathermapSensors",
+        "x": 695,
+        "y": 450,
+        "wires": [
+            [
+                "6dbb6816.a9bbc8"
+            ]
+        ]
+    },
+    {
+        "id": "49657cb4.e85f24",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Transform data before DB",
+        "func": "var timestamp = msg.data.dt ;\nvar temp = msg.payload.tempc ;   //C\nvar hum = msg.payload.humidity ;   //%\nvar press = Math.round(msg.data.main.pressure) ;    //hPa\nvar vis = msg.data.visibility ;           //meters\nvar wSpeed = msg.payload.windspeed ;         //m/s, *100 to loose decimals\nvar wDir = msg.payload.winddirection ;          //meteorological degrees\nvar skyCloudCov = msg.data.clouds.all ;         //%\n\nvar newMsg = { \n        time : timestamp,\n        temperature : temp,\n        humidity : hum,\n        pressure : press,\n        visibility : vis,\n        windSpeed : wSpeed,\n        windDirection : wDir,\n        skyCloudCoverage : skyCloudCov\n};\n\nreturn newMsg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 135,
+        "wires": [
+            [
+                "3ec7a055.79c47"
+            ]
+        ]
+    },
+    {
+        "id": "4f9438f6.021528",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"Sensor data entry failed. (openweathermap)\" ;\n} else {\n    msg.payload = \"Sensor data inserted into database successfully. (openweathermap)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 420,
+        "y": 210,
+        "wires": [
+            [
+                "f57e0c99.780e3"
+            ]
+        ]
+    },
+    {
+        "id": "f57e0c99.780e3",
+        "type": "debug",
+        "z": "6c115d5e.e0c5b4",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 685,
+        "y": 210,
+        "wires": []
+    },
+    {
+        "id": "3ec7a055.79c47",
+        "type": "function",
+        "z": "6c115d5e.e0c5b4",
+        "name": "query create tables (openweathermap)",
+        "func": "/*\nmsg.topic = \"INSERT INTO AthensStationOpenweathermap (time, temperature, humidity, pressure, visibility, windSpeed, windDirection, clouds) \" +\n    \"VALUES (\" + msg.time + \",\" + msg.temperature + \",\" + msg.humidity +\n    \",\" + msg.pressure + \",\" + msg.visibility + \",\" + msg.windSpeed + \",\" +\n    msg.windDirection + \",\" + msg.skyCloudCoverage + \") ;\" ;\n*/\n\n//console.log(msg.topic) ;\n\nvar query = \"\" ;\nif (typeof(msg.temperature) != undefined && !isNaN(msg.temperature)) {\n    query += \"INSERT INTO sensor1 (time, temperature) VALUES (\" +\n    msg.time + \",\" + msg.temperature + \") ;\" ;\n}\nif (typeof(msg.humidity) != undefined && !isNaN(msg.humidity)) {\n    query += \"INSERT INTO sensor2 (time, humidity) VALUES (\" +\n    msg.time + \",\" + msg.humidity + \") ;\" ;\n}\nif (typeof(msg.pressure) != undefined && !isNaN(msg.pressure)) {\n    query += \"INSERT INTO sensor3 (time, pressure) VALUES (\" +\n    msg.time + \",\" + msg.pressure + \") ;\" ;\n}\nif (typeof(msg.visibility) != undefined && !isNaN(msg.visibility)) {\n    query += \"INSERT INTO sensor4 (time, visibility) VALUES (\" +\n    msg.time + \",\" + msg.visibility + \") ;\" ;\n}\nif (typeof(msg.windSpeed) != undefined && !isNaN(msg.windSpeed)\n    && typeof(msg.windDirection) != undefined && !isNaN(msg.windDirection)) {\n    query += \"INSERT INTO sensor5 (time, speed, direction) VALUES (\" +\n    msg.time + \",\" + msg.windSpeed + \",\" + msg.windDirection + \") ;\" ;\n}\nif (typeof(msg.skyCloudCoverage) != undefined && !isNaN(msg.skyCloudCoverage)) {\n    query += \"INSERT INTO sensor6 (time, cloudCoverage) VALUES (\" +\n    msg.time + \",\" + msg.skyCloudCoverage + \") ;\" ;\n}\n\nmsg.topic = query ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 765,
+        "y": 135,
+        "wires": [
+            [
+                "2a1ed994.8d6176"
+            ]
+        ]
+    },
+    {
+        "id": "5d2993e1.0cdcdc",
+        "type": "MySQLdatabase",
+        "z": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "diplwmatikiData",
+        "tz": ""
+    }
+]

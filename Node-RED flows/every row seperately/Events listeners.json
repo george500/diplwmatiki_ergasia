@@ -1,0 +1,1525 @@
+[
+    {
+        "id": "af6a0afc.3b4668",
+        "type": "tab",
+        "label": "Events listeners",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "31d52c.84938ad4",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "9a38e2f6.d7ba"
+            ]
+        ]
+    },
+    {
+        "id": "9a38e2f6.d7ba",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "SensorCreated Event Listener",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nif (web3.isConnected())\n    console.log(\"Connected.\") ;\nif (web3 == null)\n    return ;\n\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar result ;\n\nBrokerContract.SensorCreated({}, { fromBlock: 0, toBlock: 'latest' }, (err, res) => {\n        if(!err) {\n            node.send( {payload:res} ) ;\n       }\n       else {\n           console.log(\"Error.\") ;\n       }\n}) ;\n\nreturn ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 40,
+        "wires": [
+            [
+                "34195452.9c5c7c",
+                "65553001.65742"
+            ]
+        ]
+    },
+    {
+        "id": "94927df1.9b817",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "CompletedTransaction Event Listener",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar result ;\n\nBrokerContract.CompletedTransaction({}, { fromBlock: 0, toBlock: 'latest' }, (err, res) => {\n        if (err) {\n            console.log(err) ;\n            return;\n        }\n        //result = res.args.seller.toString() + \"-----\" + res.args.sensorID.toString() + \"-----\" + web3.fromWei(res.args.price) \n        //+ \"-----\" + res.args.frequency.toString() ;\n        node.send( {payload:res} ) ;\n}) ;\n\nreturn ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 400,
+        "y": 130,
+        "wires": [
+            [
+                "4b4e655d.be728c",
+                "65553001.65742"
+            ]
+        ]
+    },
+    {
+        "id": "364f044f.955ddc",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 130,
+        "wires": [
+            [
+                "94927df1.9b817"
+            ]
+        ]
+    },
+    {
+        "id": "42e7f52b.c6cddc",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 730,
+        "wires": [
+            [
+                "e87cb57.1918d48"
+            ]
+        ]
+    },
+    {
+        "id": "f9979ebc.af6a5",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "query create table sensors",
+        "func": "msg.topic = \"CREATE TABLE sensors (sensorID INT UNSIGNED PRIMARY KEY,\" +\n    \" seller CHAR(42),  sensorType TINYINT UNSIGNED, \" +\n    \"price VARCHAR(78), startTime INT UNSIGNED, frequency SMALLINT UNSIGNED, \" +\n    \"latitude FLOAT(9,6), longtitude FLOAT(9,6), url VARCHAR(2083), \" +\n    \"logIndex INT, transactionIndex INT, transactionHash CHAR(66), \" +\n    \"blockNumber BIGINT, blockHash CHAR(66))\"  ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370.0069389343262,
+        "y": 729.1631784439087,
+        "wires": [
+            [
+                "42e7f52b.c6cddc"
+            ]
+        ]
+    },
+    {
+        "id": "e87cb57.1918d48",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table sensors created\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 730,
+        "wires": [
+            [
+                "49c5cb55.a063c4"
+            ]
+        ]
+    },
+    {
+        "id": "49c5cb55.a063c4",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 730,
+        "wires": []
+    },
+    {
+        "id": "fc95355a.6cb6f8",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 730,
+        "wires": [
+            [
+                "f9979ebc.af6a5"
+            ]
+        ]
+    },
+    {
+        "id": "9c56cf95.8cc55",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 850,
+        "wires": [
+            [
+                "c033d43d.0c3998"
+            ]
+        ]
+    },
+    {
+        "id": "7a169366.bb900c",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "drop table sensors",
+        "func": "msg.topic = \"DROP TABLE sensors\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 850,
+        "wires": [
+            [
+                "9c56cf95.8cc55"
+            ]
+        ]
+    },
+    {
+        "id": "c033d43d.0c3998",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table sensors dropped\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 850,
+        "wires": [
+            [
+                "dc86b2cf.14f7f"
+            ]
+        ]
+    },
+    {
+        "id": "dc86b2cf.14f7f",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 850,
+        "wires": []
+    },
+    {
+        "id": "c432514b.fc0c2",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 850,
+        "wires": [
+            [
+                "7a169366.bb900c"
+            ]
+        ]
+    },
+    {
+        "id": "8511077a.e28648",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 460,
+        "y": 85,
+        "wires": [
+            [
+                "46b2f71c.dc35a8"
+            ]
+        ]
+    },
+    {
+        "id": "34195452.9c5c7c",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "insert in table sensors",
+        "func": "var web3 = global.get('web3Conn') ;\n\n//console.log(msg.payload) ;\nvar seller = msg.payload.args.seller.toString() ;\nvar sensorID = msg.payload.args.sensorID.toString() ;\nvar sensorType = msg.payload.args.sensorType.toString() ;\n//var price = web3.fromWei(msg.payload.args.price) ;\nvar price = msg.payload.args.price.toString() ;\nvar startTime = msg.payload.args.startTime.toString() ;\nvar frequency = msg.payload.args.frequency.toString() ;\nvar coordMult = 1000000 ;\nvar latitude = msg.payload.args.latitude.toString() / coordMult ;      //from solidity comes *10^6\nvar longtitude = msg.payload.args.longtitude.toString() / coordMult ;  //from solidity comes *10^6\nvar url = msg.payload.args.url.toString() ;\n\nmsg.topic = \"INSERT INTO sensors (seller, sensorID, sensorType, price, startTime, \" +\n    \"frequency, latitude, longtitude, url, \" +\n    \"logIndex, transactionIndex, transactionHash, blockNumber, blockHash) \" +\n    \"VALUES ('\" +\n    seller + \"',\" + sensorID + \",\" + sensorType + \",\" + price + \",\" + startTime + \",\" +\n    frequency + \",\" + latitude + \",\" + longtitude + \",'\" + url + \"',\" +\n    msg.payload.logIndex + \",\" + msg.payload.transactionIndex + \",'\" +\n    msg.payload.transactionHash + \"',\" + msg.payload.blockNumber + \",'\" +\n    msg.payload.blockHash + \"')\" ;\n    \nvar text = \"INSERT INTO sensors (seller, sensorID, sensorType, price, startTime, \" +\n    \"frequency, latitude, longtitude, url, \" +\n    \"logIndex, transactionIndex, transactionHash, blockNumber, blockHash) \" +\n    \"VALUES ('\" +\n    seller + \"',\" + sensorID + \",\" + sensorType + \",\" + price + \",\" + startTime + \",\" +\n    frequency + \",\" + latitude + \",\" + longtitude + \",'\" + url + \"',\" +\n    msg.payload.logIndex + \",\" + msg.payload.transactionIndex + \",'\" +\n    msg.payload.transactionHash + \"',\" + msg.payload.blockNumber + \",'\" +\n    msg.payload.blockHash + \"') ;\" ;\n\n//console.log(text) ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 140,
+        "y": 85,
+        "wires": [
+            [
+                "8511077a.e28648"
+            ]
+        ]
+    },
+    {
+        "id": "46b2f71c.dc35a8",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Inserted in table sensors\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 85,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "83796d71.29244",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 910,
+        "wires": [
+            [
+                "c2999b5c.b1b658"
+            ]
+        ]
+    },
+    {
+        "id": "9881ae37.e7665",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "query create table transactions",
+        "func": "msg.topic = \"CREATE TABLE transactions \" +\n    \"(transactionID INT UNSIGNED PRIMARY KEY, \" +\n    \"buyer CHAR(42), sensorID INT UNSIGNED, \" +\n    \"fromTime INT UNSIGNED, toTime INT UNSIGNED, \" +\n    \"amount VARCHAR(78),\" +\n    \"logIndex INT, transactionIndex INT, transactionHash CHAR(66), \" +\n    \"blockNumber BIGINT, blockHash CHAR(66))\"  ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 910,
+        "wires": [
+            [
+                "83796d71.29244"
+            ]
+        ]
+    },
+    {
+        "id": "c2999b5c.b1b658",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transactions created\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 910,
+        "wires": [
+            [
+                "e959035.05e53"
+            ]
+        ]
+    },
+    {
+        "id": "e959035.05e53",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 910,
+        "wires": []
+    },
+    {
+        "id": "b876bf35.9b98c",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 910,
+        "wires": [
+            [
+                "9881ae37.e7665"
+            ]
+        ]
+    },
+    {
+        "id": "ee029c8e.33b6a",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 1030,
+        "wires": [
+            [
+                "3946c0cf.8991"
+            ]
+        ]
+    },
+    {
+        "id": "ae805ccb.eb61f",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "drop table transactions",
+        "func": "msg.topic = \"DROP TABLE transactions\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 1030,
+        "wires": [
+            [
+                "ee029c8e.33b6a"
+            ]
+        ]
+    },
+    {
+        "id": "3946c0cf.8991",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transactions dropped\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 1030,
+        "wires": [
+            [
+                "3ffe0968.c2c636"
+            ]
+        ]
+    },
+    {
+        "id": "3ffe0968.c2c636",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 1030,
+        "wires": []
+    },
+    {
+        "id": "7cc47d16.3e5e04",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1030,
+        "wires": [
+            [
+                "ae805ccb.eb61f"
+            ]
+        ]
+    },
+    {
+        "id": "10232b06.e80175",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 460,
+        "y": 175,
+        "wires": [
+            [
+                "1c517fbf.b80aa"
+            ]
+        ]
+    },
+    {
+        "id": "4b4e655d.be728c",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "insert in table transactions",
+        "func": "var web3 = global.get('web3Conn') ;\n\n//console.log(msg.payload) ;\nvar transID = msg.payload.args.transID.toString() ;\nvar buyer = msg.payload.args.buyer.toString() ;\nvar sensorID = msg.payload.args.sensorID.toString() ;\nvar fromTime = msg.payload.args.fromTime ;\nvar toTime = msg.payload.args.toTime ;\nvar amount = msg.payload.args.amount.toString() ;\n\n\nmsg.topic = \"INSERT INTO transactions (transactionID, buyer, sensorID, fromTime, toTime, amount, \" +\n    \"logIndex, transactionIndex, transactionHash, blockNumber, blockHash) \" +\n    \"VALUES (\" + transID + \",'\" + buyer + \"',\" + sensorID + \",\" + fromTime + \",\" + toTime + \",\" +\n    amount + \",\" +\n    msg.payload.logIndex + \",\" + msg.payload.transactionIndex + \",'\" +\n    msg.payload.transactionHash + \"',\" + msg.payload.blockNumber + \",'\" +\n    msg.payload.blockHash + \"')\" ;\n    \n//console.log(msg.topic) ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 150,
+        "y": 175,
+        "wires": [
+            [
+                "10232b06.e80175"
+            ]
+        ]
+    },
+    {
+        "id": "1c517fbf.b80aa",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Inserted in table sensors\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 175,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9f295afa.512698",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1465,
+        "wires": [
+            [
+                "9d4f7946.c079c8"
+            ]
+        ]
+    },
+    {
+        "id": "9d4f7946.c079c8",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Read memory of contract",
+        "func": "var web3 = global.get('web3Conn') ;\nweb3.eth.defaultAccount = web3.eth.accounts[8] ;\nvar clientAccount = web3.eth.accounts[8] ;\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n//NtuaTokenContract.balanceOf(web3.eth.accounts[8], (err,res) => {\n//    node.send(res)}) ;\nvar text = \"\" ;\ntext += web3.fromWei(NtuaTokenContract.balanceOf(web3.eth.accounts[0])) ;\ntext += \"\\n\" ;\ntext+= NtuaTokenContract.name.call() ;\ntext += \"\\n\" ;\ntext+= NtuaTokenContract.symbol.call() ;\ntext += \"\\n\" ;\ntext+= NtuaTokenContract.decimals.call() ;\ntext += \"\\n\" ;\ntext+= NtuaTokenContract.totalSupply.call() ;\ntext += \"\\n\" ;\ntext+= NtuaTokenContract.owner.call() ;\ntext += \"\\n\" ;\ntext+= web3.fromWei(NtuaTokenContract.price.call()) ;\n//text += \"\\n\" ;\n//text+= NtuaTokenContract.name.call() ;\n\n//text = \"Initial transactions sent. (buyers)\" ;\nconsole.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 1465,
+        "wires": [
+            [
+                "d38af255.26bba"
+            ]
+        ]
+    },
+    {
+        "id": "d38af255.26bba",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 920,
+        "y": 1465,
+        "wires": []
+    },
+    {
+        "id": "4088aa4f.eb9384",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 970,
+        "wires": [
+            [
+                "62c4ea6a.e874f4"
+            ]
+        ]
+    },
+    {
+        "id": "2ac5b74c.d89a88",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "empty table transactions",
+        "func": "msg.topic = \"DELETE FROM transactions\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 970,
+        "wires": [
+            [
+                "4088aa4f.eb9384"
+            ]
+        ]
+    },
+    {
+        "id": "62c4ea6a.e874f4",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transactions emptied.\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 970,
+        "wires": [
+            [
+                "996ce6c4.19e738"
+            ]
+        ]
+    },
+    {
+        "id": "996ce6c4.19e738",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 970,
+        "wires": []
+    },
+    {
+        "id": "c96552a7.ec5a2",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 970,
+        "wires": [
+            [
+                "2ac5b74c.d89a88"
+            ]
+        ]
+    },
+    {
+        "id": "ee8c7498.e62f28",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 790,
+        "wires": [
+            [
+                "9e4900b7.fc18e"
+            ]
+        ]
+    },
+    {
+        "id": "531c37e4.3dc928",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "empty table sensors",
+        "func": "msg.topic = \"DELETE FROM sensors\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 790,
+        "wires": [
+            [
+                "ee8c7498.e62f28"
+            ]
+        ]
+    },
+    {
+        "id": "9e4900b7.fc18e",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table sensors emptied.\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 790,
+        "wires": [
+            [
+                "9008e7f2.813368"
+            ]
+        ]
+    },
+    {
+        "id": "9008e7f2.813368",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 790,
+        "wires": []
+    },
+    {
+        "id": "707ff8fd.b40238",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 790,
+        "wires": [
+            [
+                "531c37e4.3dc928"
+            ]
+        ]
+    },
+    {
+        "id": "35d173b5.990e4c",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 220,
+        "wires": [
+            [
+                "86f2b59d.822658"
+            ]
+        ]
+    },
+    {
+        "id": "86f2b59d.822658",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "SensorChangedSeller Event Listener",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nif (web3.isConnected())\n    console.log(\"Connected.\") ;\nif (web3 == null)\n    return ;\n\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar result ;\n\nBrokerContract.SensorChangedSeller({}, { fromBlock: 0, toBlock: 'latest' }, (err, res) => {\n        if(!err) {\n            node.send( {payload:res} ) ;\n       }\n       else {\n           console.log(\"Error.\") ;\n       }\n}) ;\n\nreturn ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 400,
+        "y": 220,
+        "wires": [
+            [
+                "6ceba970.77b5c8",
+                "65553001.65742"
+            ]
+        ]
+    },
+    {
+        "id": "c28fef58.448c4",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 460,
+        "y": 265,
+        "wires": [
+            [
+                "e6f7d970.918708"
+            ]
+        ]
+    },
+    {
+        "id": "6ceba970.77b5c8",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "update table sensors",
+        "func": "var web3 = global.get('web3Conn') ;\n\nvar sensorID = msg.payload.args.sensorID.toString() ;\nvar seller = msg.payload.args.seller.toString() ;\n\nmsg.topic = \"UPDATE sensors\" +\n    \" SET seller='\" + seller +\n    \"' WHERE sensorID=\" + sensorID ;\n    \nvar text = \"UPDATE sensors\" +\n    \" SET seller='\" + seller +\n    \"' WHERE sensorID=\" + sensorID ;\n    \n//console.log(text) ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 140,
+        "y": 265,
+        "wires": [
+            [
+                "c28fef58.448c4"
+            ]
+        ]
+    },
+    {
+        "id": "e6f7d970.918708",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Updated seller.\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 265,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4542bcc1.0b34a4",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 310,
+        "wires": [
+            [
+                "4edf5553.1d4b6c"
+            ]
+        ]
+    },
+    {
+        "id": "4edf5553.1d4b6c",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "SensorChangedPrice Event Listener",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nif (web3.isConnected())\n    console.log(\"Connected.\") ;\nif (web3 == null)\n    return ;\n\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar result ;\n\nBrokerContract.SensorChangedPrice({}, { fromBlock: 0, toBlock: 'latest' }, (err, res) => {\n        if(!err) {\n            node.send( {payload:res} ) ;\n       }\n       else {\n           console.log(\"Error.\") ;\n       }\n}) ;\n\nreturn ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 400,
+        "y": 310,
+        "wires": [
+            [
+                "c7e3c6a0.1161f8",
+                "65553001.65742"
+            ]
+        ]
+    },
+    {
+        "id": "2a14dd0c.8d1092",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 460,
+        "y": 355,
+        "wires": [
+            [
+                "56e490bf.d6778"
+            ]
+        ]
+    },
+    {
+        "id": "56e490bf.d6778",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Updated price\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 355,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "10e18c33.44eb04",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 400,
+        "wires": [
+            [
+                "f9f9032a.01b76"
+            ]
+        ]
+    },
+    {
+        "id": "f9f9032a.01b76",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "SensorChangedUrl Event Listener",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nif (web3.isConnected())\n    console.log(\"Connected.\") ;\nif (web3 == null)\n    return ;\n\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar result ;\n\nBrokerContract.SensorChangedUrl({}, { fromBlock: 0, toBlock: 'latest' }, (err, res) => {\n        if(!err) {\n            node.send( {payload:res} ) ;\n       }\n       else {\n           console.log(\"Error.\") ;\n       }\n}) ;\n\nreturn ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 400,
+        "wires": [
+            [
+                "a0d5cb7.f2c0638",
+                "65553001.65742"
+            ]
+        ]
+    },
+    {
+        "id": "aa73e162.7f366",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 460,
+        "y": 445,
+        "wires": [
+            [
+                "47b3d0f0.acb85"
+            ]
+        ]
+    },
+    {
+        "id": "47b3d0f0.acb85",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Updated URL\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 445,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c7e3c6a0.1161f8",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "update table sensors",
+        "func": "var web3 = global.get('web3Conn') ;\n\nvar sensorID = msg.payload.args.sensorID.toString() ;\nvar price = msg.payload.args.price.toString() ;\n\nmsg.topic = \"UPDATE sensors\" +\n    \" SET price=\" + price +\n    \" WHERE sensorID=\" + sensorID ;\n    \nvar text = \"UPDATE sensors\" +\n    \" SET price=\" + price +\n    \" WHERE sensorID=\" + sensorID ;\n    \n//console.log(text) ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 140,
+        "y": 355,
+        "wires": [
+            [
+                "2a14dd0c.8d1092"
+            ]
+        ]
+    },
+    {
+        "id": "a0d5cb7.f2c0638",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "update table sensors",
+        "func": "var web3 = global.get('web3Conn') ;\n\nvar sensorID = msg.payload.args.sensorID.toString() ;\nvar url = msg.payload.args.url.toString() ;\n\nmsg.topic = \"UPDATE sensors\" +\n    \" SET url='\" + url +\n    \"' WHERE sensorID=\" + sensorID ;\n    \nvar text = \"UPDATE sensors\" +\n    \" SET url='\" + url +\n    \"' WHERE sensorID=\" + sensorID ;\n    \n//console.log(text) ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 140,
+        "y": 445,
+        "wires": [
+            [
+                "aa73e162.7f366"
+            ]
+        ]
+    },
+    {
+        "id": "edc54d71.a6acc",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 505,
+        "wires": [
+            [
+                "cf31728b.60b3"
+            ]
+        ]
+    },
+    {
+        "id": "cf31728b.60b3",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Transfer Event Listener",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nif (web3.isConnected())\n    console.log(\"Connected.\") ;\nif (web3 == null)\n    return ;\n\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\n\nvar result ;\n\nNtuaTokenContract.Transfer({}, { fromBlock: 0, toBlock: 'latest' }, (err, res) => {\n        if(!err) {\n            node.send( {payload:res} ) ;\n       }\n       else {\n           console.log(\"Error.\") ;\n       }\n}) ;\n\nreturn ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 505,
+        "wires": [
+            [
+                "5217b19d.0ef48",
+                "65553001.65742"
+            ]
+        ]
+    },
+    {
+        "id": "9589e492.5a7d88",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 1090,
+        "wires": [
+            [
+                "e7c47352.b8a71"
+            ]
+        ]
+    },
+    {
+        "id": "62adc112.801be",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "query create table transfers",
+        "func": "msg.topic = \"CREATE TABLE transfers \" +\n    \"(from_address CHAR(42), to_address CHAR(42), \" +\n    \"value VARCHAR(78), \" +\n    \"logIndex INT, transactionIndex INT, transactionHash CHAR(66), \" +\n    \"blockNumber BIGINT, blockHash CHAR(66))\"  ;\n    \n    console.log(msg.topic) ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 1090,
+        "wires": [
+            [
+                "9589e492.5a7d88"
+            ]
+        ]
+    },
+    {
+        "id": "e7c47352.b8a71",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transactions created\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 1090,
+        "wires": [
+            [
+                "60cde1d6.67c6"
+            ]
+        ]
+    },
+    {
+        "id": "60cde1d6.67c6",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 1090,
+        "wires": []
+    },
+    {
+        "id": "27893e2d.f6a542",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1090,
+        "wires": [
+            [
+                "62adc112.801be"
+            ]
+        ]
+    },
+    {
+        "id": "15226293.b4f30d",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 1210,
+        "wires": [
+            [
+                "7d531ab2.1ab8b4"
+            ]
+        ]
+    },
+    {
+        "id": "398a3f9a.96853",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "drop table transfers",
+        "func": "msg.topic = \"DROP TABLE transfers\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 1210,
+        "wires": [
+            [
+                "15226293.b4f30d"
+            ]
+        ]
+    },
+    {
+        "id": "7d531ab2.1ab8b4",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transactions dropped\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 1210,
+        "wires": [
+            [
+                "9581ad6b.1b97e"
+            ]
+        ]
+    },
+    {
+        "id": "9581ad6b.1b97e",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 1210,
+        "wires": []
+    },
+    {
+        "id": "5422728a.1d24ec",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1210,
+        "wires": [
+            [
+                "398a3f9a.96853"
+            ]
+        ]
+    },
+    {
+        "id": "1bb918bf.008e87",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 1150,
+        "wires": [
+            [
+                "9027e86.6ccff18"
+            ]
+        ]
+    },
+    {
+        "id": "6713b33f.30609c",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "empty table transfers",
+        "func": "msg.topic = \"DELETE FROM transfers\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 1150,
+        "wires": [
+            [
+                "1bb918bf.008e87"
+            ]
+        ]
+    },
+    {
+        "id": "9027e86.6ccff18",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transfers emptied.\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 1150,
+        "wires": [
+            [
+                "66363c92.881174"
+            ]
+        ]
+    },
+    {
+        "id": "66363c92.881174",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 1150,
+        "wires": []
+    },
+    {
+        "id": "438d17d4.2965f8",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1150,
+        "wires": [
+            [
+                "6713b33f.30609c"
+            ]
+        ]
+    },
+    {
+        "id": "5217b19d.0ef48",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "insert in table transfers",
+        "func": "var web3 = global.get('web3Conn') ;\n\nvar from = msg.payload.args.from.toString() ;\nvar to = msg.payload.args.to.toString() ;\nvar value = msg.payload.args.value.toString() ;\n\n\nmsg.topic = \"INSERT INTO transfers (from_address, to_address, value, \" +\n    \"logIndex, transactionIndex, transactionHash, blockNumber, blockHash) \" +\n    \"VALUES ('\" + from + \"','\" + to + \"',\" + value + \",\" +\n    msg.payload.logIndex + \",\" + msg.payload.transactionIndex + \",'\" +\n    msg.payload.transactionHash + \"',\" + msg.payload.blockNumber + \",'\" +\n    msg.payload.blockHash + \"')\" ;\n    \n//console.log(msg.topic) ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 140,
+        "y": 550,
+        "wires": [
+            [
+                "e2c3bdfc.19c32"
+            ]
+        ]
+    },
+    {
+        "id": "e2c3bdfc.19c32",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 460,
+        "y": 550,
+        "wires": [
+            [
+                "69755e3c.28e85"
+            ]
+        ]
+    },
+    {
+        "id": "69755e3c.28e85",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Inserted in table transfers\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 550,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c327effe.61c5a",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 1270,
+        "wires": [
+            [
+                "2fec2ab7.3efae6"
+            ]
+        ]
+    },
+    {
+        "id": "395629cc.983636",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "query create table txns",
+        "func": "msg.topic = \"CREATE TABLE txns \" +\n    \"(logIndex INT, transactionIndex INT, transactionHash CHAR(66), \" +\n    \"blockHash CHAR(66), blockNumber BIGINT, address CHAR(42), type VARCHAR(25), event VARCHAR(100))\"  ;\n    \n    console.log(msg.topic) ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 1270,
+        "wires": [
+            [
+                "c327effe.61c5a"
+            ]
+        ]
+    },
+    {
+        "id": "2fec2ab7.3efae6",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transactions created\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 1270,
+        "wires": [
+            [
+                "4119a2b9.89e5bc"
+            ]
+        ]
+    },
+    {
+        "id": "4119a2b9.89e5bc",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 1270,
+        "wires": []
+    },
+    {
+        "id": "78bbee32.19aef",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1270,
+        "wires": [
+            [
+                "395629cc.983636"
+            ]
+        ]
+    },
+    {
+        "id": "33c1f62e.1d421a",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 1390,
+        "wires": [
+            [
+                "49525a3d.bf5794"
+            ]
+        ]
+    },
+    {
+        "id": "5eda4a71.72a534",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "drop table txns",
+        "func": "msg.topic = \"DROP TABLE txns\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 1390,
+        "wires": [
+            [
+                "33c1f62e.1d421a"
+            ]
+        ]
+    },
+    {
+        "id": "49525a3d.bf5794",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table transactions dropped\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 1390,
+        "wires": [
+            [
+                "4b9ea4bf.a0b24c"
+            ]
+        ]
+    },
+    {
+        "id": "4b9ea4bf.a0b24c",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 1390,
+        "wires": []
+    },
+    {
+        "id": "ceb2a99d.b0aac8",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1390,
+        "wires": [
+            [
+                "5eda4a71.72a534"
+            ]
+        ]
+    },
+    {
+        "id": "1fb89f3f.a163b1",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 670,
+        "y": 1330,
+        "wires": [
+            [
+                "1c5b1a7.4a9ade6"
+            ]
+        ]
+    },
+    {
+        "id": "f487bcb9.39ec8",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "empty table txns",
+        "func": "msg.topic = \"DELETE FROM txns\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 1330,
+        "wires": [
+            [
+                "1fb89f3f.a163b1"
+            ]
+        ]
+    },
+    {
+        "id": "1c5b1a7.4a9ade6",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Table txns emptied.\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 1330,
+        "wires": [
+            [
+                "4d5fbc7e.2bf2e4"
+            ]
+        ]
+    },
+    {
+        "id": "4d5fbc7e.2bf2e4",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1130,
+        "y": 1330,
+        "wires": []
+    },
+    {
+        "id": "1a203d9a.5ba762",
+        "type": "inject",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 100,
+        "y": 1330,
+        "wires": [
+            [
+                "f487bcb9.39ec8"
+            ]
+        ]
+    },
+    {
+        "id": "65553001.65742",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "insert in table txns",
+        "func": "var web3 = global.get('web3Conn') ;\n\nmsg.topic = \"CREATE TABLE txns \" +\n    \"(logIndex INT, transactionIndex INT, transactionHash CHAR(42), \" +\n    \"blockHash CHAR(42), blockNumber BIGINT, address CHAR(42), type, event VARCHAR(100))\"  ;\n\nmsg.topic = \"INSERT INTO txns (logIndex, transactionIndex, transactionHash, blockHash, blockNumber, address, type, event) \" +\n    \"VALUES (\" + msg.payload.logIndex + \",\" + msg.payload.transactionIndex + \",'\" +\n    msg.payload.transactionHash + \"','\" + msg.payload.blockHash + \"',\" + msg.payload.blockNumber + \",'\" +\n    msg.payload.address + \"','\" + msg.payload.type + \"','\" + msg.payload.event + \"')\" ;\n    \n//console.log(msg.topic) ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 970,
+        "y": 200,
+        "wires": [
+            [
+                "42ed79ec.ab9718"
+            ]
+        ]
+    },
+    {
+        "id": "42ed79ec.ab9718",
+        "type": "mysql",
+        "z": "af6a0afc.3b4668",
+        "mydb": "9c0507cb.28cf98",
+        "name": "diplwmatikiSensors",
+        "x": 970,
+        "y": 280,
+        "wires": [
+            [
+                "c4d7a74f.f70bb8"
+            ]
+        ]
+    },
+    {
+        "id": "c4d7a74f.f70bb8",
+        "type": "function",
+        "z": "af6a0afc.3b4668",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Inserted in table txns\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 970,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ffd86305.d63d5",
+        "type": "debug",
+        "z": "af6a0afc.3b4668",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 950,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "9c0507cb.28cf98",
+        "type": "MySQLdatabase",
+        "z": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "diplwmatikiSensors",
+        "tz": ""
+    }
+]

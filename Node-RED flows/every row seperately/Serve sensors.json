@@ -1,0 +1,305 @@
+[
+    {
+        "id": "33df9b7a.ef0554",
+        "type": "tab",
+        "label": "Serve sensors",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1b796260.d90c6e",
+        "type": "function",
+        "z": "33df9b7a.ef0554",
+        "name": "Retrieve sensors",
+        "func": "//var bignumber = global.get('bignumber') ;\n//console.log(msg.payload) ;\nvar id = msg.payload.id ;\nvar seller = msg.payload.seller ;\nvar type = msg.payload.type ;\nvar fromPrice = msg.payload.fromPrice ;\nvar toPrice = msg.payload.toPrice ;\nvar fromStart = msg.payload.fromStart ;\nvar toStart = msg.payload.toStart ;\nvar fromFrequency = msg.payload.fromFrequency ;\nvar toFrequency = msg.payload.toFrequency ;\nvar isFirst = true ;\n//var priceMult = bignumber.BigNumber(1000000000000000000) ;\nvar priceMult = 1000000000000000000 ;\n//console.log(typeof(priceMult)) ;\nvar conditions = \"\" ;\n//pedia vasis sensorID, seller, sensorType, price, startTime, frequency, longtitude, latitude\n/*CREATE TABLE sensors (sensorID INT UNSIGNED PRIMARY KEY,\" +\n    \" seller CHAR(42),  sensorType TINYINT UNSIGNED, \" +\n    \"price VARCHAR(78), startTime INT UNSIGNED, frequency SMALLINT UNSIGNED, \" +\n    \"longtitude INT , latitude INT, url VARCHAR(2083)*/\nif (id != null) {\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \" sensorID=\" + id + \" \"  ;\n    isFirst = false ;\n}\nif (seller != null) {\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"seller='\" + seller + \"' \" ;\n    isFirst = false ;\n}\nif (type != null) {\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"sensorType=\" + type + \" \" ;\n    isFirst = false ;\n}\nif (fromPrice != null) {\n    //var from = bignumber.BigNumber(fromPrice) ;\n    fromPrice = fromPrice * priceMult ;\n    //console.log(fromPrice) ;\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"price>=\" + fromPrice + \" \" ;\n    isFirst = false ;\n}\nif (toPrice != null) {\n    toPrice = toPrice * priceMult ;\n    //console.log(toPrice) ;\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"price<=\" + toPrice + \" \" ;\n    isFirst = false ;\n}\nif (fromStart != null) {\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"startTime>=\" + fromStart + \" \" ;\n    isFirst = false ;\n}\nif (toStart != null) {\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"startTime<=\" + toStart + \" \" ;\n    isFirst = false ;\n}\nif (fromFrequency != null) {\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"frequency>=\" + fromFrequency + \" \" ;\n    isFirst = false ;\n}\nif (toFrequency != null) {\n    symbol = (isFirst) ? \"\" : \"AND \" ;\n    conditions += symbol + \"frequency<=\" + toFrequency + \" \" ;\n    isFirst = false ;\n}\nif (isFirst) {\n    conditions = \"1=1\" ;\n    //msg.topic = \"SELECT * FROM sensors WHERE 1=1\" ;\n}\nmsg.topic = \"SELECT * FROM sensors WHERE \" + conditions ;\n//console.log(msg.topic) ;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 45,
+        "wires": [
+            [
+                "76c1e28b.9f91fc"
+            ]
+        ]
+    },
+    {
+        "id": "76c1e28b.9f91fc",
+        "type": "mysql",
+        "z": "33df9b7a.ef0554",
+        "mydb": "9c0507cb.28cf98",
+        "name": "Retrieving sensors",
+        "x": 630,
+        "y": 45,
+        "wires": [
+            [
+                "7b3ea7c7.586788"
+            ]
+        ]
+    },
+    {
+        "id": "7b3ea7c7.586788",
+        "type": "function",
+        "z": "33df9b7a.ef0554",
+        "name": "Creating table",
+        "func": "var priceMult = 1000000000000000000 ;\nvar maxID = 0 ;\nvar table = \"<thead class=\\\"thead-default\\\">\" +\n                \"<tr><th>Seller</th><th>Sensor ID</th><th>Sensor Type</th><th>Price (NTUATok)</th>\" +\n                \"<th>First data at</th><th>Frequency</th><th>Map</th><th>Buy Data</th></tr>\"+\n                \"</thead>\" ;\nif (!msg.payload) {\n   table += \"<tr><td>Error, something happened</td></tr>\" ;\n} else {\n    var i, len = msg.payload.length, type, startDate ;\n    //console.log(msg.payload) ;\n    if (len != 0) {\n        for (i = 0; i < len; i++) {\n            switch(msg.payload[i].sensorType.toString()) {\n               \tcase \"1\":\n            \t\ttype =  \"temperature\" ;\n            \t\tbreak;\n            \tcase \"2\":\n            \t\ttype =  \"humidity\" ;\n            \t\tbreak;\n            \tcase \"3\":\n            \t\ttype =  \"pressure\" ;\n            \t\tbreak;\n            \tcase \"4\":\n            \t\ttype =  \"visibility\" ;\n            \t\tbreak;\n            \tcase \"5\":\n            \t\ttype =  \"wind speed & direction\" ;\n            \t\tbreak;\n            \tcase \"6\":\n            \t\ttype =  \"cloudCoverage\" ;\n            \t\tbreak;\n            \tcase \"7\":\n            \t\ttype =  \"dewPoint\" ;\n            \t\tbreak;\n            \tcase \"8\":\n            \t\ttype =  \"solarRad\" ;\n            \t\tbreak;\n            \tcase \"9\":\n            \t\ttype =  \"uv\" ;\n            \t\tbreak;\n            \tcase \"10\":\n            \t\ttype =  \"ozone\" ;\n            \t\tbreak;\n            }\n            var startDate = new Date(msg.payload[i].startTime * 1000) ;      //expects milliseconds\n            table += \"<tr><td>\" + msg.payload[i].seller + \"</td>\" +\n                    \"<td>\" + msg.payload[i].sensorID + \"</td>\" +\n                    \"<td>\" + type + \"</td>\" +\n                    \"<td>\" + msg.payload[i].price / priceMult + \"</td>\" +\n                    \"<td>\" + startDate + \"</td>\" +\n                    \"<td>\" + msg.payload[i].frequency + \"</td>\" +\n                    \"<td><a type=\\\"button\\\" class=\\\"btn btn-primary\\\" onclick=\\\"seeMap(\" +\n                    msg.payload[i].sensorID + \")\\\">See map</a></td>\" +\n                    \"<td><a type=\\\"button\\\" class=\\\"btn btn-primary\\\" href=\\\"/buyData?sensor=\" +\n                    msg.payload[i].sensorID + \"\\\">Buy Data</a></td></tr>\" ;\n                    //\"<td>\" + msg.payload[i].url + \"</td></tr>\" ;\n            table += \"<tr class=\\\"alwaysHidden\\\"><div class=\\\"alwaysHidden\\\" id=\\\"tableSensorLon\" + msg.payload[i].sensorID +\"\\\">\" + msg.payload[i].longtitude + \"</div>\" +\n                    \"<div class=\\\"alwaysHidden\\\" id=\\\"tableSensorLat\" + msg.payload[i].sensorID +\"\\\">\" + msg.payload[i].latitude + \"</div>\" +\n                    \"</tr>\" ;\n                    \n                    //\"<td>\" + msg.payload[i].longtitude + \"</td>\" +\n                    //\"<td>\" + msg.payload[i].latitude + \"</td>\" +\n            if (maxID < msg.payload[i].sensorID)\n                maxID = msg.payload[i].sensorID ;\n        }\n    }\n    else {\n        table = \"<tr><td>No sensors available.</td></tr>\" ;\n    }\n}\ntable += \"<tr><div class=\\\"alwaysHidden\\\" id=\\\"idUpTo\\\">\" + maxID + \"</div>\" +\n                    \"</tr>\" ;\nmsg.payload.table = table ;\nmsg.payload = table ;\n \nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 845,
+        "y": 45,
+        "wires": [
+            [
+                "42750ebd.52683"
+            ]
+        ]
+    },
+    {
+        "id": "d60be424.d71d28",
+        "type": "http in",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "url": "/sensors/getSensors",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 45,
+        "wires": [
+            [
+                "1b796260.d90c6e"
+            ]
+        ]
+    },
+    {
+        "id": "42750ebd.52683",
+        "type": "http response",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1025,
+        "y": 45,
+        "wires": []
+    },
+    {
+        "id": "e07a9fcf.aa424",
+        "type": "function",
+        "z": "33df9b7a.ef0554",
+        "name": "Retrieve myTransactions",
+        "func": "//var bignumber = global.get('bignumber') ;\n//console.log(msg.payload) ;\nvar buyer = msg.payload.buyer ;\n\nvar query = \"SELECT S.sensorID, S.seller, S.sensorType, S.price, S.startTime, \" +\n    \"S.frequency, S.longtitude, S.latitude, S.url, T.fromTime, T.toTime, T.amount, \" +\n    \"T.transactionHash, T.blockNumber \" +\n    \"FROM sensors AS S, transactions AS T \" +\n    \"WHERE T.buyer='\" + buyer + \"' \" ;\n\nvar id = msg.payload.id ;\nvar seller = msg.payload.seller ;\nvar type = msg.payload.type ;\nvar fromPrice = msg.payload.fromPrice ;\nvar toPrice = msg.payload.toPrice ;\nvar fromStart = msg.payload.fromStart ;\nvar toStart = msg.payload.toStart ;\nvar fromFrequency = msg.payload.fromFrequency ;\nvar toFrequency = msg.payload.toFrequency ;\n//var priceMult = bignumber.BigNumber(1000000000000000000) ;\nvar priceMult = 1000000000000000000 ;\n//console.log(typeof(priceMult)) ;\nvar conditions = \"\" ;\nif (id != null) {\n    conditions += \"AND S.sensorID=\" + id + \" \"  ;\n}\nif (seller != null) {\n    conditions += \"AND S.seller='\" + seller + \"' \" ;\n}\nif (type != null) {\n    conditions += \"AND S.sensorType=\" + type + \" \" ;\n}\nif (fromPrice != null) {\n    //var from = bignumber.BigNumber(fromPrice) ;\n    fromPrice = fromPrice * priceMult ;\n    //console.log(fromPrice) ;\n    conditions += \"AND S.price>=\" + fromPrice + \" \" ;\n}\nif (toPrice != null) {\n    toPrice = toPrice * priceMult ;\n    //console.log(toPrice) ;\n    conditions += \"AND S.price<=\" + toPrice + \" \" ;\n}\nif (fromStart != null) {\n    conditions += \"AND S.startTime>=\" + fromStart + \" \" ;\n}\nif (toStart != null) {\n    conditions += \"AND S.startTime<=\" + toStart + \" \" ;\n}\nif (fromFrequency != null) {\n    conditions += \"AND S.frequency>=\" + fromFrequency + \" \" ;\n}\nif (toFrequency != null) {\n    conditions += \"AND S.frequency<=\" + toFrequency + \" \" ;\n}\n//msg.topic = \"SELECT * FROM sensors WHERE \" + conditions ;\nquery += conditions +\n        \"AND S.sensorID=T.sensorID \" +\n        \"ORDER BY S.sensorID ;\" ;\nmsg.topic = query ;\n//console.log(msg.topic) ;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 410,
+        "y": 135,
+        "wires": [
+            [
+                "b5651d89.38cf5"
+            ]
+        ]
+    },
+    {
+        "id": "b5651d89.38cf5",
+        "type": "mysql",
+        "z": "33df9b7a.ef0554",
+        "mydb": "9c0507cb.28cf98",
+        "name": "Retrieving transactions",
+        "x": 640,
+        "y": 135,
+        "wires": [
+            [
+                "a970af81.da84b"
+            ]
+        ]
+    },
+    {
+        "id": "a970af81.da84b",
+        "type": "function",
+        "z": "33df9b7a.ef0554",
+        "name": "Creating table",
+        "func": "var priceMult = 1000000000000000000 ;\n\nvar table = \"<thead class=\\\"bg-light\\\">\" +\n                \"<tr><th colspan=\\\"3\\\" style=\\\"text-align: center;\\\">Sensor Data</th>\" +\n                \"<th colspan=\\\"5\\\" style=\\\"text-align: center;\\\">Transaction Data</th><th></th></tr>\" +\n                \"<tr><th>Sensor ID</th><th>Sensor Type</th><th>Coordinates</th>\" +\n                \"<th>Data from</th><th>to</th><th>Amount (NTUATok)</th>\" +\n                \"<th>TxHash</th><th>Block</th>\" +\n                \"<th>See bought data</th></tr>\"+\n            \"</thead>\" ;\n//console.log(msg.payload) ;\nif (!msg.payload) {\n   table += \"<tr><td>Error, something happened</td></tr>\" ;\n} else {\n    var i, len = msg.payload.length, type, startDate, fromDate, toDate ;\n    if (len > 0) {\n        for(i in msg.payload) {\n            switch(msg.payload[i].sensorType.toString()) {\n               \tcase \"1\":\n            \t\ttype =  \"temperature\" ;\n            \t\tbreak;\n            \tcase \"2\":\n            \t\ttype =  \"humidity\" ;\n            \t\tbreak;\n            \tcase \"3\":\n            \t\ttype =  \"pressure\" ;\n            \t\tbreak;\n            \tcase \"4\":\n            \t\ttype =  \"visibility\" ;\n            \t\tbreak;\n            \tcase \"5\":\n            \t\ttype =  \"wind speed & direction\" ;\n            \t\tbreak;\n            \tcase \"6\":\n            \t\ttype =  \"cloudCoverage\" ;\n            \t\tbreak;\n            \tcase \"7\":\n            \t\ttype =  \"dewPoint\" ;\n            \t\tbreak;\n            \tcase \"8\":\n            \t\ttype =  \"solarRad\" ;\n            \t\tbreak;\n            \tcase \"9\":\n            \t\ttype =  \"uv\" ;\n            \t\tbreak;\n            \tcase \"10\":\n            \t\ttype =  \"ozone\" ;\n            \t\tbreak;\n            }\n            //SELECT S.sensorID, S.seller, S.sensorType, S.price, S.startTime, \" +\n            //\"S.frequency, S.longtitude, S.latitude, S.url, T.fromTime, T.toTime\n            fromDate = new Date(msg.payload[i].fromTime * 1000) ;        //expects milliseconds\n            toDate = new Date(msg.payload[i].toTime * 1000) ;          //expects milliseconds\n            table += \"<tr><td>\" + msg.payload[i].sensorID + \"</td>\" +\n                    //\"<td>\" + msg.payload[i].seller + \"</td>\" +\n                    \"<td>\" + type + \"</td>\" +\n                    \"<td>\" + msg.payload[i].latitude + \",\" +\n                    msg.payload[i].longtitude + \"</td>\" +\n                    \"<td>\" + fromDate + \"</td>\" +\n                    \"<td>\" + toDate + \"</td>\" +\n                    \"<td>\" + msg.payload[i].amount/priceMult + \"</td>\" +\n                    \"<td>\" + msg.payload[i].transactionHash + \"</td>\" +\n                    \"<td>\" + msg.payload[i].blockNumber + \"</td>\" +\n                    \"<td><a type=\\\"button\\\" class=\\\"btn btn-primary\\\" href=\\\"/getData?sensor=\" +\n                    msg.payload[i].sensorID + \"\\\">See Data</a></td></tr>\" ;\n        }\n    }\n    else {\n        table = \"<tr><td>No sensors available.</td></tr>\" ;\n    }\n}\n\nmsg.payload.table = table ;\nmsg.payload = table ;\n \nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 845,
+        "y": 135,
+        "wires": [
+            [
+                "80650f5a.f8744"
+            ]
+        ]
+    },
+    {
+        "id": "80650f5a.f8744",
+        "type": "http response",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "x": 1025,
+        "y": 135,
+        "wires": []
+    },
+    {
+        "id": "a8b5de5d.930bc",
+        "type": "function",
+        "z": "33df9b7a.ef0554",
+        "name": "verify user",
+        "func": "//var urlTable = msg.urlTable ;\nvar ethJsUtil = global.get('ethereumjs') ;\nvar Web3 = global.get('web3') ;\nvar web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\n\nif (msg.payload != null) {\n    if (msg.payload.address != null && msg.payload.signedData != null) {\n        var urlTable = \"sensor\" + msg.payload.sensor ;\n        var initialData = \"0x9dd2c369a187b4e6b9c402f030e50743e619301ea62aa4c0737d4ef7e10a3d49\" ;\n        //var initialData = msg.payload.address ;\n        var address = msg.payload.address ;\n        var sig = msg.payload.signedData ;  //the signed data\n        \n        //console.log(address + \", \" + sig) ;\n        \n        r = sig.slice(0, 66) ;\n        s = '0x' + sig.slice(66, 130) ;\n        v = '0x' + sig.slice(130, 132) ;\n        v = web3.toDecimal(v) ;\n        initialData = ethJsUtil.toBuffer(initialData);\n        pub     = ethJsUtil.ecrecover(initialData, v, r, s);\n        addrBuf = ethJsUtil.pubToAddress(pub);\n        addr    = ethJsUtil.bufferToHex(addrBuf);\n        \n        //console.log(address + \", \" + addr) ;\n        //if address = addr then the user is who he says to be\n        if (address == addr) {\n            //if we are here, the verification was successfull\n            //msg.topic = \"address verified\" ;\n            //ecsign sign the sellers public key with the owners private key\n            //ecsign(msgHash, privateKey) returns Object\n            msg.payload = address ;\n            return msg ;\n        }\n    }\n}\n\nmsg.payload = \"\" ;  //if not successfully verified\n//console.log(msg.topic) ;                                                  //send nothing\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 210,
+        "wires": [
+            [
+                "5b6b13f6.46b67c"
+            ]
+        ]
+    },
+    {
+        "id": "5dd718eb.b6b8b8",
+        "type": "http in",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "url": "/getApiKey",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 210,
+        "wires": [
+            [
+                "a8b5de5d.930bc"
+            ]
+        ]
+    },
+    {
+        "id": "a6a4362a.42ce68",
+        "type": "comment",
+        "z": "33df9b7a.ef0554",
+        "name": "verify user",
+        "info": "",
+        "x": 285,
+        "y": 210,
+        "wires": []
+    },
+    {
+        "id": "d3f20b63.3b8718",
+        "type": "http response",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 530,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "2d68d9f7.aafac6",
+        "type": "function",
+        "z": "33df9b7a.ef0554",
+        "name": "generate api key",
+        "func": "var ethJsUtil = global.get('ethereumjs') ;\nvar Web3 = global.get('web3') ;\nvar web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\n\nvar address = msg.payload ;\n\n//if we are here, the verification was successfull\n//msg.topic = \"address verified\" ;\n//ecsign sign the sellers public key with the owners private key\n//ecsign(msgHash, privateKey) returns Object\n\nvar privateOwnerKey = new Buffer('3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1', 'hex');\nvar data = ethJsUtil.sha3(address);\nvar vrs = ethJsUtil.ecsign(data, privateOwnerKey);\n\nvar apiKey = \"0x\" ;\nvar hexNumber ;\nlet json = JSON.stringify(vrs.r);\nfor(i in JSON.parse(json).data) {\n    hexNumber = web3.fromDecimal(JSON.parse(json).data[i]) ;\n    apiKey += hexNumber.slice(2,4) ;\n}\njson = JSON.stringify(vrs.s);\nfor(i in JSON.parse(json).data) {\n    hexNumber = web3.fromDecimal(JSON.parse(json).data[i]) ;\n    apiKey += hexNumber.slice(2,4) ;\n}\nhexNumber = web3.fromDecimal(vrs.v) ;\napiKey += hexNumber.slice(2,4) ;\n\nmsg.payload = apiKey ;\n//console.log(msg.payload) ;\nreturn msg ;\n\n/*\nr = sig.slice(0, 66) ;\ns = '0x' + sig.slice(66, 130) ;\nv = '0x' + sig.slice(130, 132) ;\nv = web3.toDecimal(v) ;\ninitialData = ethJsUtil.toBuffer(initialData)\npub     = ethJsUtil.ecrecover(initialData, v, r, s);\naddrBuf = ethJsUtil.pubToAddress(pub);\naddr    = ethJsUtil.bufferToHex(addrBuf);\n*/",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 360,
+        "wires": [
+            [
+                "d3f20b63.3b8718"
+            ]
+        ]
+    },
+    {
+        "id": "5b6b13f6.46b67c",
+        "type": "switch",
+        "z": "33df9b7a.ef0554",
+        "name": "verified",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 105,
+        "y": 300,
+        "wires": [
+            [
+                "d64f8bdd.14d5e8"
+            ],
+            [
+                "2d68d9f7.aafac6"
+            ]
+        ]
+    },
+    {
+        "id": "5d6b809d.b98b4",
+        "type": "http response",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 530,
+        "y": 285,
+        "wires": []
+    },
+    {
+        "id": "d64f8bdd.14d5e8",
+        "type": "function",
+        "z": "33df9b7a.ef0554",
+        "name": "Error",
+        "func": "msg.payload = \"Error.\" ;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 290,
+        "y": 285,
+        "wires": [
+            [
+                "5d6b809d.b98b4"
+            ]
+        ]
+    },
+    {
+        "id": "cceb1a9d.03bf18",
+        "type": "http in",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "url": "/sensors/getMySensors",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 135,
+        "wires": [
+            [
+                "e07a9fcf.aa424"
+            ]
+        ]
+    },
+    {
+        "id": "94c9d181.2e5ab",
+        "type": "debug",
+        "z": "33df9b7a.ef0554",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 850,
+        "y": 210,
+        "wires": []
+    },
+    {
+        "id": "9c0507cb.28cf98",
+        "type": "MySQLdatabase",
+        "z": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "diplwmatikiSensors",
+        "tz": ""
+    }
+]

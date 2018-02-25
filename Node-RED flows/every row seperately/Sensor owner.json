@@ -1,0 +1,161 @@
+[
+    {
+        "id": "5abdea0.e608d18",
+        "type": "tab",
+        "label": "Sensor owner",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "968b602e.ae2cb",
+        "type": "function",
+        "z": "5abdea0.e608d18",
+        "name": "Output from mysql",
+        "func": "/*\nvar table = \"<thead class=\\\"thead-default\\\">\" +\n            \"<tr><th>Time</th><th>Temperature</th></tr>\"+\n            \"</thead>\" ;\nif (!msg.payload) {\n   table += \"<tr><td>No results </td></tr>\" ;\n} else {\n    var i, len = msg.payload.length ;\n    console.log(msg.payload) ;\n    if (len != 0) {\n        for (i = 0; i < len; i++) {\n            table += \"<tr><td>\" + new Date(msg.payload[i].time * 1000) + \"</td>\" +\n                    \"<td>\" + msg.payload[i].temperature + \"</td></tr>\" ;\n        }\n    }\n    else {\n        table = \"There are not available data for this account.\"\n    }\n}\n\n//msg.payload.table = table ;\nmsg.payload = table ;\nconsole.log(table) ;\n*/\n \nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 285,
+        "wires": [
+            [
+                "6b3f6923.effef8"
+            ]
+        ]
+    },
+    {
+        "id": "1908d737.25f029",
+        "type": "mysql",
+        "z": "5abdea0.e608d18",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "sensorData",
+        "x": 115,
+        "y": 285,
+        "wires": [
+            [
+                "968b602e.ae2cb"
+            ]
+        ]
+    },
+    {
+        "id": "6b3f6923.effef8",
+        "type": "http response",
+        "z": "5abdea0.e608d18",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 590,
+        "y": 285,
+        "wires": []
+    },
+    {
+        "id": "70c10f52.4249b",
+        "type": "comment",
+        "z": "5abdea0.e608d18",
+        "name": "Model of the creators site",
+        "info": "",
+        "x": 140,
+        "y": 45,
+        "wires": []
+    },
+    {
+        "id": "dd8db818.76a5e8",
+        "type": "http in",
+        "z": "5abdea0.e608d18",
+        "name": "",
+        "url": "/mysensor/:id",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 105,
+        "wires": [
+            [
+                "412e931.3ccd46c"
+            ]
+        ]
+    },
+    {
+        "id": "412e931.3ccd46c",
+        "type": "function",
+        "z": "5abdea0.e608d18",
+        "name": "retrieve data",
+        "func": "var sensorID = msg.req.params.id ;\nvar urlTable = \"sensor\" + sensorID ;\n\nvar key = msg.payload.key ;\n//check the api key\n//if (msg.payload.key == \"thisIsMe\") {\nif (key == \"0xc72a28ee53bf7da38f84f437aaf3299c6b032f8ec295aee7b4768b0deb4e0723b446cb6b4687f547a26cc5a392950d21727145f197b83178d2af91c908aad1b\" ||\n    key == \"0xd168fb13432ac1d12e2d4fdda92af73a18faff14ea8adce817e7c26db0a823348c2bb376e5c7a478a2191d2a467e7d246f6839e8bd5a3eecfd8485633161b\" ||\n    key == \"0xbb8e305dc8f5d6f0c17b991aa114817f44eee1ef566b4fae8913f3d1dbab953a49ae8c381d927ceb8b901275901c8820738bf6b3b0f9b29fdd9f3ad4c5dc1b\" ||\n    key == \"0xb1139b30654dc2024c5c0154af630f7deb8516dcefc39811fe61cbc115fd33005b996d01733288d82417d5468ee629141c738b3bb3c0535ed8593c21b\" ||\n    key == \"0x431fd52205f846823c95b8d17ea816f469b9be119fc3e2e40901416c417776f56447e667f13fb4065bbf367be745f6cc5b4d6cf53b51a6f8a2cd6fe291d1b\" ||\n    key == \"0x3d1223f417cb93b0d5b426329bb6d4782b071baeb283dee2824cc8125663f1a6663694b43d1f8ca378792fa11eed76db3fa2f799cce5b7af1b1bc4895796fca1c\" ||\n    key == \"0x58cca7fedc9ad7ee8b6205df4a52129462db8883ce931a8a1f2c0b63ec556ec4312a870709633b7d1b7539f6f2380f28c23a0f352ee33ece717fbaac24b3e31b\" ||\n    key == \"0xb915f47ed44fb4f5719210204dbcdac8bf4787123bee4bfef2873da6b82f5ec4fd47161831cc9dd8ed693467ea9c17ffc62c8eab49ba12bf3719b742593fc71c\" ||\n    key == \"0xacfcff774a87831b0c42cd238a3f3b835c3a9c07795d335d234308f7f811ff067d297a211488857016c4749e1ba7b07f7986b0ebf2fdf6f898d1da1d8dfdd1c\"\n) {\n    var query ;\n    query = \"SELECT * FROM \" + urlTable + \" WHERE \" ;        //if successfully verified\n    var intervals = msg.payload.intervals ;\n    var i ;\n    for(i = 0; i < intervals.length-1; i++) {\n        //console.log(i) ;\n        //query += \"(time>=\" + intervals[i].fromTime + \" AND time<=\" + intervals[i].toTime + \") OR \" ;\n        query += \"(time BETWEEN \" + intervals[i].fromTime + \" AND \" + intervals[i].toTime + \") OR \" ;\n    }\n    //column_name BETWEEN value1 AND value2\n    //the final conditions\n    //query += \"(time>=\" + intervals[i].fromTime + \" time<=\" + intervals[i].toTime + \") ;\" ;\n    query += \"(time BETWEEN \" + intervals[i].fromTime + \" AND \" + intervals[i].toTime + \") ;\" ;\n}\nelse {\n    query = \"\" ;\n}\n//query = \"SELECT * FROM \" + urlTable + \" ;\" ;\nmsg.topic = query ;        //if not successfully verified  \n//console.log(msg.topic) ;                  //send nothing\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 445,
+        "y": 105,
+        "wires": [
+            [
+                "99b36d23.35ba6"
+            ]
+        ]
+    },
+    {
+        "id": "99b36d23.35ba6",
+        "type": "switch",
+        "z": "5abdea0.e608d18",
+        "name": "if key wrong",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 130,
+        "y": 195,
+        "wires": [
+            [
+                "7631a229.2cebcc"
+            ],
+            [
+                "1908d737.25f029"
+            ]
+        ]
+    },
+    {
+        "id": "6047ed9c.6a7664",
+        "type": "http response",
+        "z": "5abdea0.e608d18",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 590,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7631a229.2cebcc",
+        "type": "function",
+        "z": "5abdea0.e608d18",
+        "name": "statusCode=400",
+        "func": "msg.statusCode = 400 ;\n \nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 180,
+        "wires": [
+            [
+                "6047ed9c.6a7664"
+            ]
+        ]
+    },
+    {
+        "id": "5d2993e1.0cdcdc",
+        "type": "MySQLdatabase",
+        "z": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "diplwmatikiData",
+        "tz": ""
+    }
+]

@@ -1,0 +1,302 @@
+[
+    {
+        "id": "fb4aa79e.bbb2e8",
+        "type": "tab",
+        "label": "Initial transactions",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "77fc4967.cd6928",
+        "type": "inject",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 75,
+        "wires": [
+            [
+                "75dbdbb9.904f84"
+            ]
+        ]
+    },
+    {
+        "id": "75dbdbb9.904f84",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transactions (create initial sensors) Openweathermap Athens",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\n//Openweathermap\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[1] ;\nvar type = 1 ;\nvar price = web3.toWei(0.001, \"ether\") ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 2 ;\nvar latitude = 37.98 * coordMult ;\nvar longtitude = 23.72 * coordMult ;\nvar url = \"localhost:1880/mysensor/1\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.001, \"ether\") ;\nurl = \"localhost:1880/mysensor/2\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.002, \"ether\") ;\nurl = \"localhost:1880/mysensor/3\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.006, \"ether\") ;\nurl = \"localhost:1880/mysensor/4\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.004, \"ether\") ;\nurl = \"localhost:1880/mysensor/5\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 6 ;\nprice = web3.toWei(0.003, \"ether\") ;\nurl = \"localhost:1880/mysensor/6\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"Initial transactions sent. (sellers)\" ;\n//console.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 495,
+        "y": 75,
+        "wires": [
+            [
+                "a6bbd32.ce16f3"
+            ]
+        ]
+    },
+    {
+        "id": "d358a15.566626",
+        "type": "debug",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 925,
+        "y": 195,
+        "wires": []
+    },
+    {
+        "id": "559b1e69.4c9fc",
+        "type": "inject",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 255,
+        "wires": [
+            [
+                "6971d7c3.407808"
+            ]
+        ]
+    },
+    {
+        "id": "6971d7c3.407808",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transaction (give ntua token to everyone)",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nfor(var i=0; i<=9; i++)\n    NtuaTokenContract.transfer(NtuaTokenContract._eth.accounts[i], web3.toWei(50, \"ether\"));\n\n\n\ntext = \"Initial transactions sent. (give ntua token to everyone)\" ;\nconsole.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 435,
+        "y": 255,
+        "wires": [
+            [
+                "d776357e.8f1288"
+            ]
+        ]
+    },
+    {
+        "id": "d776357e.8f1288",
+        "type": "debug",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 925,
+        "y": 255,
+        "wires": []
+    },
+    {
+        "id": "a6bbd32.ce16f3",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transactions (create initial sensors) wunderground Athens",
+        "func": "var web3 = global.get('web3Conn') ;\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[2] ;\nvar type ;\nvar price ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 6 ;\nvar latitude ;\nvar longtitude ;\nvar url ;\n\n//wunderground Athens\nlatitude = 37.984592 * coordMult ;\nlongtitude = 23.714140 * coordMult ;\n\ntype = 1 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/7\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/8\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/9\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/10\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/11\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 7 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/12\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 8 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/13\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 9 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/14\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"Initial transactions sent. (sellers)\" ;\n//console.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 275,
+        "y": 135,
+        "wires": [
+            [
+                "902363cc.df839"
+            ]
+        ]
+    },
+    {
+        "id": "902363cc.df839",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transactions (create initial sensors) Darksky Athens",
+        "func": "var web3 = global.get('web3Conn') ;\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[3] ;\nvar type ;\nvar price ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 1 ;\nvar latitude ;\nvar longtitude ;\nvar url ;\n\n//Darksky Athens\nlatitude = 37.98 * coordMult ;\nlongtitude = 23.72 * coordMult ;\n\ntype = 1 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/15\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/16\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/17\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/18\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/19\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 6 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/20\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 7 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/21\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 9 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/22\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 10 ;\nprice = web3.toWei(0.0003, \"ether\") ;\nurl = \"localhost:1880/mysensor/23\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"Initial transactions sent. (sellers)\" ;\n//console.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 765,
+        "y": 135,
+        "wires": [
+            [
+                "80e1fc1b.13073"
+            ]
+        ]
+    },
+    {
+        "id": "80e1fc1b.13073",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transactions (create initial sensors) wunderground Thessaloniki",
+        "func": "var web3 = global.get('web3Conn') ;\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[2] ;\nvar type ;\nvar price ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 2 ;\nvar latitude ;\nvar longtitude ;\nvar url ;\n\n//wunderground Thessaloniki\nlatitude = 40.631668 * coordMult ;\nlongtitude = 22.948055 * coordMult ;\n\ntype = 1 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/24\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 2 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/25\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 3 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/26\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 4 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/27\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 5 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/28\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 7 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/29\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 8 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/30\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\ntype = 9 ;\nprice = web3.toWei(0.0002, \"ether\") ;\nurl = \"localhost:1880/mysensor/31\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\ntext = \"Initial transactions sent. (sellers)\" ;\n//console.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 295,
+        "y": 195,
+        "wires": [
+            [
+                "d358a15.566626"
+            ]
+        ]
+    },
+    {
+        "id": "c4d9bcbc.c41fd",
+        "type": "inject",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 540,
+        "wires": [
+            [
+                "8cd6f1d7.67f7e"
+            ]
+        ]
+    },
+    {
+        "id": "8cd6f1d7.67f7e",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transaction (sellers) only one",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[0] ;\nvar clientAccount = web3.eth.accounts[0] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar text = \"1\" ;\n\n//Openweathermap\nvar coordMult = 1000000 ;\nvar seller = web3.eth.accounts[1] ;\nvar type = 1 ;\nvar price = web3.toWei(0.001, \"ether\") ;\nvar startTime = parseInt((new Date('22-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar frequency = 12 ;\nvar latitude = 37.98 * coordMult ;\nvar longtitude = 23.72 * coordMult ;\nvar url = \"localhost:1880/mysensor/1\" ;\nBrokerContract.createSensor(seller, type, price, startTime, frequency, latitude, longtitude, url, {gas: 300000}) ;\n\n\ntext = \"One transaction sent. (sellers)\" ;\nconsole.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 395,
+        "y": 540,
+        "wires": [
+            [
+                "f2e68066.bfd2c"
+            ]
+        ]
+    },
+    {
+        "id": "f2e68066.bfd2c",
+        "type": "debug",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 925,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "bcb88cbc.e8beb",
+        "type": "inject",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 315,
+        "wires": [
+            [
+                "f9283191.3bdbb"
+            ]
+        ]
+    },
+    {
+        "id": "f9283191.3bdbb",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transactions (buyers)",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[8] ;\nvar clientAccount = web3.eth.accounts[8] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar text ;\n\nvar buyer = web3.eth.accounts[8] ;\nvar sensorID = 1 ;\nvar fromTime = parseInt((new Date('24-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('25-Dec-2017 19:57:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\n//console.log(sensorID, fromTime,toTime) ;\n\nsensorID = 1 ;\nfromTime = parseInt((new Date('25-Nov-2017 20:57:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('18-Dec-2017 23:57:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\n//console.log(sensorID, fromTime,toTime) ;\nsensorID = 1 ;\nfromTime = parseInt((new Date('19-Dec-2017 17:54:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('1-Jan-2018 19:54:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\n//console.log(sensorID, fromTime,toTime) ;\nsensorID = 14 ;\nfromTime = parseInt((new Date('26-Dec-2017 17:54:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('29-Dec-2017 19:54:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\n//console.log(sensorID, fromTime,toTime) ;\n\ntext = \"Initial transactions sent. (buyers)\" ;\nconsole.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 375,
+        "y": 315,
+        "wires": [
+            [
+                "bf6f3907.3f6b98"
+            ]
+        ]
+    },
+    {
+        "id": "bf6f3907.3f6b98",
+        "type": "debug",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 925,
+        "y": 315,
+        "wires": []
+    },
+    {
+        "id": "aff6586.80001a8",
+        "type": "comment",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "If the accounts are unlocked",
+        "info": "",
+        "x": 135,
+        "y": 30,
+        "wires": []
+    },
+    {
+        "id": "e32b439c.b5bd1",
+        "type": "inject",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 600,
+        "wires": [
+            [
+                "9ed7aafd.678348"
+            ]
+        ]
+    },
+    {
+        "id": "9ed7aafd.678348",
+        "type": "function",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "Initial Transaction (buyers) only one",
+        "func": "//var Web3 = global.get('web3') ;\n//var web3 = new Web3(new Web3.providers.HttpProvider(\"http://localhost:8545\"));\nvar web3 = global.get('web3Conn') ;\n\nweb3.eth.defaultAccount = web3.eth.accounts[8] ;\nvar clientAccount = web3.eth.accounts[8] ;\n\nconst NtuaTokenContract = global.get('NtuaTokenContract') ;\n\nconst BrokerContract = global.get('BrokerContract') ;\n\nvar text ;\n\nvar buyer = web3.eth.accounts[8] ;\nvar sensorID = 1 ;\nvar fromTime = parseInt((new Date('24-Nov-2017 17:57:35').getTime() / 1000).toFixed(0)) ;\nvar toTime = parseInt((new Date('25-Dec-2017 19:57:35').getTime() / 1000).toFixed(0)) ;\nBrokerContract.buyData(sensorID, fromTime, toTime, {gas: 300000, from: buyer}) ;\n\ntext = \"Initial transaction sent. (buyers)\" ;\nconsole.log(text) ;\n\nmsg.payload = text ;\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 395,
+        "y": 600,
+        "wires": [
+            [
+                "abe90e14.f2d4c"
+            ]
+        ]
+    },
+    {
+        "id": "abe90e14.f2d4c",
+        "type": "debug",
+        "z": "fb4aa79e.bbb2e8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 925,
+        "y": 600,
+        "wires": []
+    }
+]

@@ -1,0 +1,790 @@
+[
+    {
+        "id": "bfcdb22b.d007",
+        "type": "tab",
+        "label": "wunderground",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c3b55be2.1e4678",
+        "type": "wunderground in",
+        "z": "bfcdb22b.d007",
+        "name": "wunderground Athens",
+        "lon": "",
+        "lat": "",
+        "city": "Athens",
+        "country": "Greece",
+        "x": 115,
+        "y": 180,
+        "wires": [
+            [
+                "480746bf.287908"
+            ]
+        ]
+    },
+    {
+        "id": "b9e790e5.f4d9c",
+        "type": "wunderground",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "lon": "23.72",
+        "lat": "37.98",
+        "city": "",
+        "country": "",
+        "x": 635,
+        "y": 45,
+        "wires": [
+            [
+                "f4e540ca.4748f"
+            ]
+        ]
+    },
+    {
+        "id": "979f1389.9168f",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 45,
+        "wires": [
+            [
+                "abb9cacf.969458"
+            ]
+        ]
+    },
+    {
+        "id": "abb9cacf.969458",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Set coordinates Athens",
+        "func": "var newMsg = { \n        location:  {\n        lat : 1,\n        lon : 1\n        }\n};\n\n//var date = new Date() ;\n//console.log(msg.payload) ;\n\nnewMsg.location.lat = 37.98 ;\nnewMsg.location.lon = 23.72 ;\n\nreturn newMsg;\n\nmsg.location.lat = 37.98 ;\nmsg.location.lon = 23.72 ;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 395,
+        "y": 45,
+        "wires": [
+            [
+                "b9e790e5.f4d9c"
+            ]
+        ]
+    },
+    {
+        "id": "f4e540ca.4748f",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 860,
+        "y": 45,
+        "wires": []
+    },
+    {
+        "id": "c017ce74.41a7a",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 685,
+        "y": 555,
+        "wires": [
+            [
+                "6aecb3da.5f5b6c"
+            ]
+        ]
+    },
+    {
+        "id": "dbdfb97e.46b178",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "create tables (wunderground) Athens",
+        "func": "/*\nmsg.topic = \"CREATE TABLE AthensStationWunderground (time INT UNSIGNED PRIMARY KEY, temperature SMALLINT, \" +\n    \"humidity TINYINT UNSIGNED, pressure SMALLINT UNSIGNED,\" +\n    \"visibility SMALLINT UNSIGNED, windSpeed SMALLINT UNSIGNED, \" +\n    \"windDirection SMALLINT UNSIGNED, dewPoint SMALLINT, \" +\n    \"UV SMALLINT UNSIGNED) ;\" ;\n*/\n\nmsg.topic = \"CREATE TABLE sensor7 (time INT UNSIGNED PRIMARY KEY, temperature FLOAT(10,2)) ;\" +\n\"CREATE TABLE sensor8 (time INT UNSIGNED PRIMARY KEY, humidity TINYINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor9 (time INT UNSIGNED PRIMARY KEY, pressure SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor10 (time INT UNSIGNED PRIMARY KEY, visibility SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor11 (time INT UNSIGNED PRIMARY KEY, speed FLOAT(10,2) UNSIGNED, direction SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor12 (time INT UNSIGNED PRIMARY KEY, dewPoint FLOAT(10,2)) ;\" +\n\"CREATE TABLE sensor13 (time INT UNSIGNED PRIMARY KEY, solarRad SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor14 (time INT UNSIGNED PRIMARY KEY, uv SMALLINT UNSIGNED) ;\" ;\n\n/*\nTemperature\nHumidity\nPressure\nVisibility\nWind (speed and direction)\nDew point\nSolar radiation\nUV\n*/\n\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 555,
+        "wires": [
+            [
+                "c017ce74.41a7a"
+            ]
+        ]
+    },
+    {
+        "id": "6aecb3da.5f5b6c",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data created. (wunderground)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 555,
+        "wires": [
+            [
+                "d65cd990.f05da8"
+            ]
+        ]
+    },
+    {
+        "id": "d65cd990.f05da8",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 555,
+        "wires": []
+    },
+    {
+        "id": "fbfc475c.ab8268",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 555,
+        "wires": [
+            [
+                "dbdfb97e.46b178"
+            ]
+        ]
+    },
+    {
+        "id": "5e602f89.91874",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "drop tables (wunderground) Athens",
+        "func": "msg.topic = \"DROP TABLE sensor7 ;\" +\n\"DROP TABLE sensor8 ;\" +\n\"DROP TABLE sensor9 ;\" +\n\"DROP TABLE sensor10 ;\" +\n\"DROP TABLE sensor11 ;\" +\n\"DROP TABLE sensor12 ;\" +\n\"DROP TABLE sensor13 ;\" +\n\"DROP TABLE sensor14 ;\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 675,
+        "wires": [
+            [
+                "ac54da69.c49778"
+            ]
+        ]
+    },
+    {
+        "id": "f29d26e1.457038",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data dropped. (wunderground)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 675,
+        "wires": [
+            [
+                "68a7319a.34299"
+            ]
+        ]
+    },
+    {
+        "id": "68a7319a.34299",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 675,
+        "wires": []
+    },
+    {
+        "id": "4ad86bad.5c61d4",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 675,
+        "wires": [
+            [
+                "5e602f89.91874"
+            ]
+        ]
+    },
+    {
+        "id": "ac54da69.c49778",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 685,
+        "y": 675,
+        "wires": [
+            [
+                "f29d26e1.457038"
+            ]
+        ]
+    },
+    {
+        "id": "f2da5e71.d8997",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "empty tables (wunderground) Athens",
+        "func": "msg.topic = \"DELETE TABLE sensor7 ;\" +\n\"DELETE TABLE sensor8 ;\" +\n\"DELETE TABLE sensor9 ;\" +\n\"DELETE TABLE sensor10 ;\" +\n\"DELETE TABLE sensor11 ;\" +\n\"DELETE TABLE sensor12 ;\" +\n\"DELETE TABLE sensor13 ;\" +\n\"DELETE TABLE sensor14 ;\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 615,
+        "wires": [
+            [
+                "61261ccf.c26654"
+            ]
+        ]
+    },
+    {
+        "id": "17ca1e67.7151d2",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data emptied. (wunderground)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 615,
+        "wires": [
+            [
+                "6893945a.1c8f4c"
+            ]
+        ]
+    },
+    {
+        "id": "6893945a.1c8f4c",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 615,
+        "wires": []
+    },
+    {
+        "id": "63aef530.5ad83c",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 615,
+        "wires": [
+            [
+                "f2da5e71.d8997"
+            ]
+        ]
+    },
+    {
+        "id": "61261ccf.c26654",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 685,
+        "y": 615,
+        "wires": [
+            [
+                "17ca1e67.7151d2"
+            ]
+        ]
+    },
+    {
+        "id": "e4973c0f.15968",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 175,
+        "y": 255,
+        "wires": [
+            [
+                "19ae0441.3fb2cc"
+            ]
+        ]
+    },
+    {
+        "id": "900188a1.5684e8",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "query create tables (wunderground) Athens",
+        "func": "/*\nmsg.topic = \"INSERT INTO AthensStationWunderground (time, temperature, humidity, pressure, visibility, windSpeed, windDirection, dewPoint, UV) \" +\n    \"VALUES (\" + msg.time + \",\" + msg.temperature + \",\" + msg.humidity +\n    \",\" + msg.pressure + \",\" + msg.visibility + \",\" + msg.windSpeed + \",\" +\n    msg.windDirection + \",\" + msg.dewPoint + \",\" + msg.UV + \") ;\" ;\n*/   \n//console.log(msg.topic) ;\n\nvar query = \"\" ;\nif (typeof(msg.temperature) != undefined && !isNaN(msg.temperature)) {\n    query += \"INSERT INTO sensor7 (time, temperature) VALUES (\" +\n    msg.time + \",\" + msg.temperature + \") ;\" ;\n}\nif (typeof(msg.humidity) != undefined && !isNaN(msg.humidity)) {\n    query += \"INSERT INTO sensor8 (time, humidity) VALUES (\" +\n    msg.time + \",\" + msg.humidity + \") ;\" ;\n}\nif (typeof(msg.pressure) != undefined && !isNaN(msg.pressure)) {\n    query += \"INSERT INTO sensor9 (time, pressure) VALUES (\" +\n    msg.time + \",\" + msg.pressure + \") ;\" ;\n}\nif (typeof(msg.visibility) != undefined && !isNaN(msg.visibility)) {\n    query += \"INSERT INTO sensor10 (time, visibility) VALUES (\" +\n    msg.time + \",\" + msg.visibility + \") ;\" ;\n}\nif (typeof(msg.windSpeed) != undefined && !isNaN(msg.windSpeed) &&\n    typeof(msg.windDirection) != undefined && !isNaN(msg.windDirection)) {\n    query += \"INSERT INTO sensor11 (time, speed, direction) VALUES (\" +\n    msg.time + \",\" + msg.windSpeed + \",\" + msg.windDirection + \") ;\" ;\n}\nif (typeof(msg.dewPoint) != undefined && !isNaN(msg.dewPoint)) {\n    query += \"INSERT INTO sensor12 (time, dewPoint) VALUES (\" +\n    msg.time + \",\" + msg.dewPoint + \") ;\" ;\n}\nif (typeof(msg.solarRad) != undefined && !isNaN(msg.solarRad)) {\n    query += \"INSERT INTO sensor13 (time, solarRad) VALUES (\" +\n    msg.time + \",\" + msg.solarRad + \") ;\" ;\n}\nif (typeof(msg.uv) != undefined && !isNaN(msg.uv)) {\n    query += \"INSERT INTO sensor14 (time, uv) VALUES (\" +\n    msg.time + \",\" + msg.uv + \") ;\" ;\n}\n\nmsg.topic = query ;\n    \nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 830,
+        "y": 180,
+        "wires": [
+            [
+                "e4973c0f.15968"
+            ]
+        ]
+    },
+    {
+        "id": "480746bf.287908",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Transform data before DB Athens",
+        "func": "var timestamp = msg.data.current_observation.observation_epoch ;\nvar temp = msg.data.current_observation.temp_c ;       //C\nvar hum = msg.data.current_observation.relative_humidity ;  //%\nvar press = Math.round(msg.data.current_observation.pressure_mb) ;      //millibar=hPa\nvar vis = Math.round(msg.data.current_observation.visibility_km * 1000) ;    //km\nvar wSpeed = msg.data.current_observation.wind_kph ;         //kph we want it in m/s\nvar wDir = msg.data.current_observation.wind_degrees ;      //meteorological degrees\nvar dewP = msg.data.current_observation.dewpoint_c ;        //C\nvar solRadiation = Math.round(msg.data.current_observation.solarradiation) ;    //\nvar uvRadiation = msg.data.current_observation.UV ;         //0-11\n\n//cut the % from the end\nhum = hum.substring(0, hum.length - 1);\n//kph to m/s * 100\nwSpeed = wSpeed / 3.6 ;\n\nvar newMsg = { \n        time : timestamp,\n        temperature : temp,\n        humidity : hum,\n        pressure : press,\n        visibility : vis,\n        windSpeed : wSpeed,\n        windDirection : wDir,\n        dewPoint : dewP,\n        solarRad : solRadiation,\n        uv : uvRadiation\n};\n\nreturn newMsg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 455,
+        "y": 180,
+        "wires": [
+            [
+                "900188a1.5684e8"
+            ]
+        ]
+    },
+    {
+        "id": "19ae0441.3fb2cc",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"Sensor data entry failed. (darksky)\" ;\n} else {\n    msg.payload = \"Sensor data inserted into database successfully. (wunderground)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 435,
+        "y": 255,
+        "wires": [
+            [
+                "286f80bb.c2d24"
+            ]
+        ]
+    },
+    {
+        "id": "286f80bb.c2d24",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 730,
+        "y": 255,
+        "wires": []
+    },
+    {
+        "id": "8cf40e6e.d22fc",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 685,
+        "y": 750,
+        "wires": [
+            [
+                "2348be08.ded542"
+            ]
+        ]
+    },
+    {
+        "id": "ad2de85f.2a0cb8",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "create tables (wunderground) Thessaloniki",
+        "func": "/*\nmsg.topic = \"CREATE TABLE AthensStationWunderground (time INT UNSIGNED PRIMARY KEY, temperature SMALLINT, \" +\n    \"humidity TINYINT UNSIGNED, pressure SMALLINT UNSIGNED,\" +\n    \"visibility SMALLINT UNSIGNED, windSpeed SMALLINT UNSIGNED, \" +\n    \"windDirection SMALLINT UNSIGNED, dewPoint SMALLINT, \" +\n    \"UV SMALLINT UNSIGNED) ;\" ;\n*/\n\nmsg.topic = \"CREATE TABLE sensor24 (time INT UNSIGNED PRIMARY KEY, temperature FLOAT(10,2)) ;\" +\n\"CREATE TABLE sensor25 (time INT UNSIGNED PRIMARY KEY, humidity TINYINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor26 (time INT UNSIGNED PRIMARY KEY, pressure SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor27 (time INT UNSIGNED PRIMARY KEY, visibility SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor28 (time INT UNSIGNED PRIMARY KEY, speed FLOAT(10,2) UNSIGNED, direction SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor29 (time INT UNSIGNED PRIMARY KEY, dewPoint FLOAT(10,2)) ;\" +\n\"CREATE TABLE sensor30 (time INT UNSIGNED PRIMARY KEY, solarRad SMALLINT UNSIGNED) ;\" +\n\"CREATE TABLE sensor31 (time INT UNSIGNED PRIMARY KEY, uv SMALLINT UNSIGNED) ;\" ;\n\n/*\nTemperature\nHumidity\nPressure\nVisibility\nWind (speed and direction)\nDew point\nSolar radiation\nUV\n*/\n\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 750,
+        "wires": [
+            [
+                "8cf40e6e.d22fc"
+            ]
+        ]
+    },
+    {
+        "id": "2348be08.ded542",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data created. (wunderground)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 750,
+        "wires": [
+            [
+                "c2920d79.3c1c8"
+            ]
+        ]
+    },
+    {
+        "id": "c2920d79.3c1c8",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 750,
+        "wires": []
+    },
+    {
+        "id": "c5e0a29e.666fb",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 750,
+        "wires": [
+            [
+                "ad2de85f.2a0cb8"
+            ]
+        ]
+    },
+    {
+        "id": "9b371f8.c6817e",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "drop tables (wunderground) Thessaloniki",
+        "func": "msg.topic = \"DROP TABLE sensor24 ;\" +\n\"DROP TABLE sensor25 ;\" +\n\"DROP TABLE sensor26 ;\" +\n\"DROP TABLE sensor27 ;\" +\n\"DROP TABLE sensor28 ;\" +\n\"DROP TABLE sensor29 ;\" +\n\"DROP TABLE sensor30 ;\" +\n\"DROP TABLE sensor31 ;\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 369.9930610656738,
+        "y": 870.8368215560913,
+        "wires": [
+            [
+                "6a1628a2.002108"
+            ]
+        ]
+    },
+    {
+        "id": "51d027d4.ad1f38",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data dropped. (wunderground)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 870,
+        "wires": [
+            [
+                "f281fbb3.da1bb8"
+            ]
+        ]
+    },
+    {
+        "id": "f281fbb3.da1bb8",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 870,
+        "wires": []
+    },
+    {
+        "id": "e6b94176.0f2c",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 870,
+        "wires": [
+            [
+                "9b371f8.c6817e"
+            ]
+        ]
+    },
+    {
+        "id": "6a1628a2.002108",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 685,
+        "y": 870,
+        "wires": [
+            [
+                "51d027d4.ad1f38"
+            ]
+        ]
+    },
+    {
+        "id": "97038def.37f34",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "empty tables (wunderground) Thessaloniki",
+        "func": "msg.topic = \"DELETE FROM  sensor24 ;\" +\n\"DELETE FROM  sensor25 ;\" +\n\"DELETE FROM  sensor26 ;\" +\n\"DELETE FROM  sensor27 ;\" +\n\"DELETE FROM  sensor28 ;\" +\n\"DELETE FROM  sensor29 ;\" +\n\"DELETE FROM  sensor30 ;\" +\n\"DELETE FROM  sensor31 ;\" ;\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 379.9930610656738,
+        "y": 810.8368215560913,
+        "wires": [
+            [
+                "388f718f.f0792e"
+            ]
+        ]
+    },
+    {
+        "id": "71f30d93.6575e4",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"No results ;\" ;\n} else {\n    msg.payload = \"Tables for sensors data emptied. (wunderground)\" ;\n}\n\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 975,
+        "y": 810,
+        "wires": [
+            [
+                "b0ea77a8.20de98"
+            ]
+        ]
+    },
+    {
+        "id": "b0ea77a8.20de98",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1210,
+        "y": 810,
+        "wires": []
+    },
+    {
+        "id": "97078d97.203ab",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 810,
+        "wires": [
+            [
+                "97038def.37f34"
+            ]
+        ]
+    },
+    {
+        "id": "388f718f.f0792e",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 685,
+        "y": 810,
+        "wires": [
+            [
+                "71f30d93.6575e4"
+            ]
+        ]
+    },
+    {
+        "id": "a30ca495.b04e38",
+        "type": "wunderground in",
+        "z": "bfcdb22b.d007",
+        "name": "wunderground Thessaloniki",
+        "lon": "",
+        "lat": "",
+        "city": "Thessaloniki",
+        "country": "Greece",
+        "x": 135,
+        "y": 345,
+        "wires": [
+            [
+                "86ca8acb.e4b0f8"
+            ]
+        ]
+    },
+    {
+        "id": "83a0a340.49ddb",
+        "type": "mysql",
+        "z": "bfcdb22b.d007",
+        "mydb": "5d2993e1.0cdcdc",
+        "name": "wundergroundSensors",
+        "x": 145,
+        "y": 420,
+        "wires": [
+            [
+                "39f39ca.090a164"
+            ]
+        ]
+    },
+    {
+        "id": "9c878488.641898",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "query create tables (wunderground) Thessaloniki",
+        "func": "/*\nmsg.topic = \"INSERT INTO AthensStationWunderground (time, temperature, humidity, pressure, visibility, windSpeed, windDirection, dewPoint, UV) \" +\n    \"VALUES (\" + msg.time + \",\" + msg.temperature + \",\" + msg.humidity +\n    \",\" + msg.pressure + \",\" + msg.visibility + \",\" + msg.windSpeed + \",\" +\n    msg.windDirection + \",\" + msg.dewPoint + \",\" + msg.UV + \") ;\" ;\n*/   \n//console.log(msg.topic) ;\n\nvar query = \"\" ;\nif (typeof(msg.temperature) != undefined && !isNaN(msg.temperature)) {\n    query += \"INSERT INTO sensor24 (time, temperature) VALUES (\" +\n    msg.time + \",\" + msg.temperature + \") ;\" ;\n}\nif (typeof(msg.humidity) != undefined && !isNaN(msg.humidity)) {\n    query += \"INSERT INTO sensor25 (time, humidity) VALUES (\" +\n    msg.time + \",\" + msg.humidity + \") ;\" ;\n}\nif (typeof(msg.pressure) != undefined && !isNaN(msg.pressure)) {\n    query += \"INSERT INTO sensor26 (time, pressure) VALUES (\" +\n    msg.time + \",\" + msg.pressure + \") ;\" ;\n}\nif (typeof(msg.visibility) != undefined && !isNaN(msg.visibility)) {\n    query += \"INSERT INTO sensor27 (time, visibility) VALUES (\" +\n    msg.time + \",\" + msg.visibility + \") ;\" ;\n}\nif (typeof(msg.windSpeed) != undefined && !isNaN(msg.windSpeed) &&\n    typeof(msg.windDirection) != undefined && !isNaN(msg.windDirection)) {\n    query += \"INSERT INTO sensor28 (time, speed, direction) VALUES (\" +\n    msg.time + \",\" + msg.windSpeed + \",\" + msg.windDirection + \") ;\" ;\n}\nif (typeof(msg.dewPoint) != undefined && !isNaN(msg.dewPoint)) {\n    query += \"INSERT INTO sensor29 (time, dewPoint) VALUES (\" +\n    msg.time + \",\" + msg.dewPoint + \") ;\" ;\n}\nif (typeof(msg.solarRad) != undefined && !isNaN(msg.solarRad)) {\n    query += \"INSERT INTO sensor30 (time, solarRad) VALUES (\" +\n    msg.time + \",\" + msg.solarRad + \") ;\" ;\n}\nif (typeof(msg.uv) != undefined && !isNaN(msg.uv)) {\n    query += \"INSERT INTO sensor31 (time, uv) VALUES (\" +\n    msg.time + \",\" + msg.uv + \") ;\" ;\n}\n\nmsg.topic = query ;\n    \nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 850,
+        "y": 345,
+        "wires": [
+            [
+                "83a0a340.49ddb"
+            ]
+        ]
+    },
+    {
+        "id": "86ca8acb.e4b0f8",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Transform data before DB Thessaloniki",
+        "func": "var timestamp = msg.data.current_observation.observation_epoch ;\nvar temp = msg.data.current_observation.temp_c ;       //C, *100 to loose decimals\nvar hum = msg.data.current_observation.relative_humidity ;  //%\nvar press = Math.round(msg.data.current_observation.pressure_mb) ;      //millibar=hPa\nvar vis = Math.round(msg.data.current_observation.visibility_km * 1000) ;    //km\nvar wSpeed = msg.data.current_observation.wind_kph ;         //kph we want it in m/s\nvar wDir = msg.data.current_observation.wind_degrees ;      //meteorological degrees\n//var skyCloudCov = msg.data.clouds.all ;                   //%     NOT AVAILABLE\nvar dewP = msg.data.current_observation.dewpoint_c ;        //C, *100 to loose decimals\nvar solRadiation = Math.round(msg.data.current_observation.solarradiation) ;  \nvar uvRadiation = Math.round(msg.data.current_observation.UV) ;         //0-11\n\n//cut the % from the end\nhum = hum.substring(0, hum.length - 1);\n//kph to m/s * 100\nwSpeed = wSpeed / 3.6 ;\n\nvar newMsg = { \n        time : timestamp,\n        temperature : temp,\n        humidity : hum,\n        pressure : press,\n        visibility : vis,\n        windSpeed : wSpeed,\n        windDirection : wDir,\n        dewPoint : dewP,\n        solarRad : solRadiation,\n        uv : uvRadiation\n};\n\n//console.log(newMsg) ;\n\nreturn newMsg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 465,
+        "y": 345,
+        "wires": [
+            [
+                "9c878488.641898"
+            ]
+        ]
+    },
+    {
+        "id": "39f39ca.090a164",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Output from mysql",
+        "func": "if (!msg.payload) {\n    msg.payload = \"Sensor data entry failed. (darksky)\" ;\n} else {\n    msg.payload = \"Sensor data inserted into database successfully. (wunderground)\" ;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 435,
+        "y": 420,
+        "wires": [
+            [
+                "50eec457.ab24ac"
+            ]
+        ]
+    },
+    {
+        "id": "50eec457.ab24ac",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 730,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "524351aa.c2536",
+        "type": "wunderground",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "lon": "",
+        "lat": "",
+        "city": "Thessaloniki",
+        "country": "Athens",
+        "x": 635,
+        "y": 105,
+        "wires": [
+            [
+                "21e3b2fe.4b959e"
+            ]
+        ]
+    },
+    {
+        "id": "a015d13a.21a45",
+        "type": "inject",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 105,
+        "y": 105,
+        "wires": [
+            [
+                "3fbb5793.b81a88"
+            ]
+        ]
+    },
+    {
+        "id": "3fbb5793.b81a88",
+        "type": "function",
+        "z": "bfcdb22b.d007",
+        "name": "Set coordinates Thessaloniki",
+        "func": "return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 405,
+        "y": 105,
+        "wires": [
+            [
+                "524351aa.c2536"
+            ]
+        ]
+    },
+    {
+        "id": "21e3b2fe.4b959e",
+        "type": "debug",
+        "z": "bfcdb22b.d007",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 860,
+        "y": 105,
+        "wires": []
+    },
+    {
+        "id": "5d2993e1.0cdcdc",
+        "type": "MySQLdatabase",
+        "z": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "diplwmatikiData",
+        "tz": ""
+    }
+]
